@@ -1,264 +1,160 @@
 ---
-date: "2019-07-12"
+author:
+- admin
+categories:
+- Post
+date: "2019-12-06"
+featured: true
+tags:
+- JupyterLab
+- Python3
+- R
+- Remote Server
 diagram: true
 image:
-  caption: 'Image credit: [**John Moeses Bauan**](https://unsplash.com/photos/OGZtQF8iC0g)'
-  placement: 3
-math: true
-title: Writing technical content in Academic
+  placement: 2
+title: Running Python and R within Jupyter Lab from Remote Server
+subtitle: Powerful conda virtual environment
 ---
 
-Academic is designed to give technical content creators a seamless experience. You can focus on the content and Academic handles the rest.
+Recently, I started converting from R to Python as I found out that more and more my daily data analysis could be smoothly handled by Python, especially when the data size is getting huge and requiring considerable computing power. I could fully utilise the computing power from remote servers by running Python on them. During the learning process, I learned about Jupyter Lab and impressed by its clean and simple design. This is the tool I really enjoy using for data analysis. It allows me to transfer between Python and R seamlessly. I believe if you end up reading this article, you must be a fan of it and want to take full use of it.
 
-**Highlight your code snippets, take notes on math classes, and draw diagrams from textual representation.**
+Here, I want to share my notes when using Jupyter Lab on server. As implied in the title, there are two parts in this article:
 
-On this page, you'll find some examples of the types of technical content that can be rendered with Academic.
+1) Creating conda environment for R and Python
+2) Running R and Python within Jupyter Lab remotely
 
-## Examples
+And I assume you already have knowledge in using remote server/HPC/clusters (I will call "server" in the following context). Before we begin, please make sure you have conda or miniconda installed on the server. Basically, Anaconda is a software package manager that helps us to install programs and packages. Most importantly, it can also create compartmentalised computational environments to avoid mess-up in your computer/server when you want to test some new tools or scripts. You can use these conda environments for different purposes, they can be program-specific (for running specific tools) or project-specific (for storing dependencies for a whole pipeline).
+#### Creating conda environment for R and Python
 
-### Code
-
-Academic supports a Markdown extension for highlighting code syntax. You can enable this feature by toggling the `highlight` option in your `config/_default/params.toml` file.
-
-    ```python
-    import pandas as pd
-    data = pd.read_csv("data.csv")
-    data.head()
-    ```
-
-renders as
-
-```python
-import pandas as pd
-data = pd.read_csv("data.csv")
-data.head()
+First, we can check the virtual environments that have been created by typing:
+```
+conda info --envs
 ```
 
-### Math
+All the conda environments have been created on the server should be listed. An asterisk will denote where you currently are, likely 'base'. In addition, your command line will be preceded with '(base)' to denote you are in the base conda environment. Something like this:
+```
+(base) jun@server:~$
+Next, I generated a specific R environment for R v3.5.1 (most recent version is R v3.6.1, but some of the packages I am using are not compatible with latest version).
+conda create --name r_3.5.1 -c r r-base=3.5.1 r-essentials
+```
+Here I named the env as `r_3.5.1` so that I know what this specific env is create for. It is a good habit to use informative name, otherwise you may forget its content when come back from a holiday. Conda then installed r-base v3.5.1 and r essential packages from r channel in env `r_3.5.1`. The packages include most commonly used r packages, like `ggplot2` and `tidyverse`.
 
-Academic supports a Markdown extension for $\LaTeX$ math. You can enable this feature by toggling the `math` option in your `config/_default/params.toml` file.
+This took several minutes to finish, and you will see the following message:
 
-To render *inline* or *block* math, wrap your LaTeX math with `$...$` or `$$...$$`, respectively.
-
-Example **math block**:
-
-```tex
-$$\gamma_{n} = \frac{ 
-\left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T 
-\left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}
-{\left \|\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right \|^2}$$
+```
+Preparing transaction: done
+Verifying transaction: done
+Executing transaction: done
+#
+# To activate this environment, use
+#
+#     $ conda activate r_3.5.1
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
 ```
 
-renders as
+Done. we now create a virtual environment specifically for R (v3.5.1). Let's try it by typing:
+```
+conda activate r_3.5.1
+```
+You will notice the command line will be preceded with (`r_3.5.1`). This indicates that we are now in the `r_3.5.1` environment. Then if you type R, you expect to see:
 
-$$\gamma_{n} = \frac{ \left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T \left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}{\left \|\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right \|^2}$$
-
-Example **inline math** `$\nabla F(\mathbf{x}_{n})$` renders as $\nabla F(\mathbf{x}_{n})$.
-
-Example **multi-line math** using the `\\` math linebreak:
-
-```tex
-$$f(k;p_0^*) = \begin{cases} p_0^* & \text{if }k=1, \\
-1-p_0^* & \text {if }k=0.\end{cases}$$
+```
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
 ```
 
-renders as
+This tells us that R is running and it is the correct version we required.
 
-$$f(k;p_0^*) = \begin{cases} p_0^* & \text{if }k=1, \\
-1-p_0^* & \text {if }k=0.\end{cases}$$
-
-### Diagrams
-
-Academic supports a Markdown extension for diagrams. You can enable this feature by toggling the `diagram` option in your `config/_default/params.toml` file or by adding `diagram: true` to your page front matter.
-
-An example **flowchart**:
-
-    ```mermaid
-    graph TD
-    A[Hard] -->|Text| B(Round)
-    B --> C{Decision}
-    C -->|One| D[Result 1]
-    C -->|Two| E[Result 2]
-    ```
-
-renders as
-
-```mermaid
-graph TD
-A[Hard] -->|Text| B(Round)
-B --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
+Type `q()` to exit from R console. Then type `python` and you will find that python is also installed.
+```
+Python 3.7.5 (default, Oct 25 2019, 15:51:11)
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+Type exit() to exit from python console.
 ```
 
-An example **sequence diagram**:
-
-    ```mermaid
-    sequenceDiagram
-    Alice->>John: Hello John, how are you?
-    loop Healthcheck
-        John->>John: Fight against hypochondria
-    end
-    Note right of John: Rational thoughts!
-    John-->>Alice: Great!
-    John->>Bob: How about you?
-    Bob-->>John: Jolly good!
-    ```
-
-renders as
-
-```mermaid
-sequenceDiagram
-Alice->>John: Hello John, how are you?
-loop Healthcheck
-    John->>John: Fight against hypochondria
-end
-Note right of John: Rational thoughts!
-John-->>Alice: Great!
-John->>Bob: How about you?
-Bob-->>John: Jolly good!
+Now we have both R and python installed in a virtual environment. We can now install jupyterlab (note that Jupyter notebook for R is included in the `r-essential` package, but we use `Jupyterlab` in this post. The same settings can be applied to Jupyter notebook as well)
+```
+conda install -n r_3.5.1 -c conda-forge jupyterlab
 ```
 
-An example **Gantt diagram**:
-
-    ```mermaid
-    gantt
-    section Section
-    Completed :done,    des1, 2014-01-06,2014-01-08
-    Active        :active,  des2, 2014-01-07, 3d
-    Parallel 1   :         des3, after des1, 1d
-    Parallel 2   :         des4, after des1, 1d
-    Parallel 3   :         des5, after des3, 1d
-    Parallel 4   :         des6, after des4, 1d
-    ```
-
-renders as
-
-```mermaid
-gantt
-section Section
-Completed :done,    des1, 2014-01-06,2014-01-08
-Active        :active,  des2, 2014-01-07, 3d
-Parallel 1   :         des3, after des1, 1d
-Parallel 2   :         des4, after des1, 1d
-Parallel 3   :         des5, after des3, 1d
-Parallel 4   :         des6, after des4, 1d
+This code tells conda to install jupyterlab from `conda-forge` channel for `env r_3.5.1`. To lunch jupyterlab, type:
+```
+jupyter-lab --no-browser
+```
+This will prompt messages like this:
+```
+from jupyter_client.session import Session
+[I 20:13:55.211 LabApp] JupyterLab extension loaded from /srv/home/jun/.conda/envs/r_3.5.1/lib/python3.7/site-packages/jupyterlab
+[I 20:13:55.211 LabApp] JupyterLab application directory is /srv/home/jun/.conda/envs/r_3.5.1/share/jupyter/lab
+[I 20:13:55.214 LabApp] Serving notebooks from local directory: /srv/home/jun
+[I 20:13:55.214 LabApp] The Jupyter Notebook is running at:
+[I 20:13:55.214 LabApp] http://localhost:8888/?token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+[I 20:13:55.214 LabApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
 ```
 
-An example **class diagram**:
+This means jupyterlab is running on your virtual environment. We will need this message (`http://localhost:8888/?token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`) for the second part of our settings. Note that the default port for Jupyter is 8888, but just in case other potential users on the same server is using this port, you may choose an arbitrary 4-digit number by typing:
+```
+jupyter-lab --no-browser --port=xxxx
+```
+to leave 8888 available. In my case, I still used 8888 as a example.
 
-    ```mermaid
-    classDiagram
-    Class01 <|-- AveryLongClass : Cool
-    <<interface>> Class01
-    Class09 --> C2 : Where am i?
-    Class09 --* C3
-    Class09 --|> Class07
-    Class07 : equals()
-    Class07 : Object[] elementData
-    Class01 : size()
-    Class01 : int chimp
-    Class01 : int gorilla
-    class Class10 {
-      <<service>>
-      int id
-      size()
-    }
-    ```
+So far so good, we now finished the first part, which we have R, Python, and Jupyterlab installed in the same virtual environment.
 
-renders as
+#### Running R and Python within Jupyter Lab remotely
 
-```mermaid
-classDiagram
-Class01 <|-- AveryLongClass : Cool
-<<interface>> Class01
-Class09 --> C2 : Where am i?
-Class09 --* C3
-Class09 --|> Class07
-Class07 : equals()
-Class07 : Object[] elementData
-Class01 : size()
-Class01 : int chimp
-Class01 : int gorilla
-class Class10 {
-  <<service>>
-  int id
-  size()
+Normally when you ssh into the server with `ssh -L 8888:localhost:8888 username@servername.edu.au` and activate the virtual environment `r_3.5.1`. You can use jupyterlab by typing `jupyter-lab` and go to your browser typing `http://localhost:8888`. This will open the jupyterlab home screen in your browser window. The first time you connect with this url, a login screen will show up asking for a token. After entering the token (i.e. `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` from above), you are able to experience the jupyterlab. You can also setup your own password and use this password to connect with this url. It is pretty straightforward.
+
+However, this is too much. There are 5 steps to complete the whole process.
+
+**Typing in ssh info → Typing password → Activate env → Load Jupyter → Open url in your browser**
+
+Can we compress all these 5 steps in one? Yes, we can.
+
+We first need to setup an SSH key-based authentication to connect to your server without entering a password by following this [post](https://linuxize.com/post/how-to-setup-passwordless-ssh-login/). Then on the server, we need to create a screen session for running the Jupyter by typing:
+```
+screen -R jupyterlab-session
+```
+This will attach a new screen on the server and you can detach it by pressing `control+A+D`, the screen will be still running in the background even after you log out the server. And next time when you log in to the same server, just type:
+```
+screen -ls
+```
+And you will see its screen ID (xxxx) and you then type:
+```
+screen -r xxxx
+```
+You will get into this screen again. I normally use this tool to run script that needs a long time to finish.
+
+Alright, the purpose to create a screen is to have a Jupyter session running constantly on the server whether you are logged in or not. Then you can connect to the existing session whenever you need. Inside this screen session, we type:
+```
+conda activate r_3.5.1
+jupyter-lab --no-browser
+```
+Let it run indefinitely. You can detach this screen by pressing `control+A+D` and log out.
+
+Then on your local computer, we need to put a bash function to your local `~/.bashrc` or `~/.bash_profile`. If you use this make sure to edit all the all-caps stuff with your own, like `USERNAME` and `HOSTNAME`. The function is copied from this [post](https://benjlindsay.com/posts/running-jupyter-lab-remotely).
+```
+function jupyter-servername {
+  port=8000 
+  remote_username=USERNAME
+  remote_hostname=HOSTNAME
+  url="http://localhost:$port" 
+  echo "Opening $url"
+  open "$url"
+  cmd="ssh -CNL localhost:"$port":localhost:8888 $remote_username@$remote_hostname" 
+  echo "Running '$cmd'"
+  eval "$cmd"
 }
 ```
+This function does a few things when you type jupyter-servername:
 
-An example **state diagram**:
+Runs ssh tunneling command if it's not already running Grabs the Jupyter token from the remote machine Opens a tab in your browser with the right url and token for you When you're done accessing your Jupyter Lab session, type `CTRL-C` and it will shut down the ssh tunnel.
 
-    ```mermaid
-    stateDiagram
-    [*] --> Still
-    Still --> [*]
-    Still --> Moving
-    Moving --> Still
-    Moving --> Crash
-    Crash --> [*]
-    ```
+In summary, with a remote screen session running Jupyter on remote server constantly, and a function defined in your local `~/.bashrc` or `~/.bash_profile`, all you need to do to run either R or Python within Jupyter in your browser from remote server is to type jupyter-servername in your terminal, and then `control-C` when you're done.
 
-renders as
-
-```mermaid
-stateDiagram
-[*] --> Still
-Still --> [*]
-Still --> Moving
-Moving --> Still
-Moving --> Crash
-Crash --> [*]
-```
-
-### Todo lists
-
-You can even write your todo lists in Academic too:
-
-```markdown
-- [x] Write math example
-- [x] Write diagram example
-- [ ] Do something else
-```
-
-renders as
-
-- [x] Write math example
-- [x] Write diagram example
-- [ ] Do something else
-
-### Tables
-
-Represent your data in tables:
-
-```markdown
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-```
-
-renders as
-
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
-### Asides
-
-Academic supports a [shortcode for asides](https://sourcethemes.com/academic/docs/writing-markdown-latex/#alerts), also referred to as *notices*, *hints*, or *alerts*. By wrapping a paragraph in `{{%/* alert note */%}} ... {{%/* /alert */%}}`, it will render as an aside.
-
-```markdown
-{{%/* alert note */%}}
-A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
-{{%/* /alert */%}}
-```
-
-renders as
-
-{{% alert note %}}
-A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
-{{% /alert %}}
-
-### Did you find this page helpful? Consider sharing it 🙌
+I hope you find this post is helpful for you. I welcome feedback, constructive criticism, and hearing about your data science projects. I can be reached on [Linkedin](https://www.linkedin.com/in/jun-ye-29aaa769/).
