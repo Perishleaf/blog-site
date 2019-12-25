@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Courses | Jun&#39;s blog</title>
+    <link>/courses/</link>
+      <atom:link href="/courses/index.xml" rel="self" type="application/rss+xml" />
+    <description>Courses</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Jun Ye, 2012-2020</copyright>
+    <image>
+      <url>/img/for_logo.jpg</url>
+      <title>Courses</title>
+      <link>/courses/</link>
+    </image>
+    
+  </channel>
+</rss>
