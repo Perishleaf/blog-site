@@ -32,7 +32,7 @@ I like to collect blog websites that have nice design or interesting topics. Not
 
 #### | *"I web, therefore I am"*
 
-
+####
 My understanding for this phrase has two folders: 1) having your own website makes you keeping track of what you have done and thought as all contents on your website are under your own control. 2) most importantly, it largely expands the chance for people to know you. You can showcase your work to prospective employers more effectively. This is extremely helpful for people looking for [tech-related jobs](https://medium.com/r/?url=https%3A%2F%2Ftowardsdatascience.com%2Fhow-to-get-hired-as-an-entry-level-data-scientist-when-you-dont-already-have-3-years-experience-476394f2cc2c). Taken together, I think it is time to make my long-term imagination to a real thing.
 
 In this post, I will share my notes in creating [my own website](https://junye0798.com/#resume) using `blogdown`, which is the tool built to significantly simplify the whole processes from creating a website to updating the website. This post basically comprises four parts:
