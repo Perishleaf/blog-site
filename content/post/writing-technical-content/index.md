@@ -1,5 +1,5 @@
 ---
-author:
+authors:
 - admin
 categories:
 - Post
