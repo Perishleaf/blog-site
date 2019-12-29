@@ -23,3 +23,6 @@ projects: []
 ---
 
 I like to collect blog websites that have nice design or interesting topics. Not only does the website itself attract me, but also people who built the website. I admire them for spending time on designing their own website and publishing contents constantly. I always imagine how nice it will be if I can build a blog website for myself one day. However, I always flinched at the complex knowledge of HTML, CSS, PHP, and JavaScript. Recently, I revisited one of the blogs by [Yihui Xie](https://yihui.org/), who is an active software engineer working in RStudio and the author of many popular R packages, including the one we are going to introduce in this post, blogdown. I was deeply touched by one of his words, which he distilled from [Carlos Scheidegger](https://cscheid.net/).
+
+
+
