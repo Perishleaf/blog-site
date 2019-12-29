@@ -14,7 +14,7 @@ subtitle: 'A simple guild for using R Blogdown'
 summary: ''
 authors: []
 lastmod: '2019-12-29T14:09:49+10:00'
-featured: yes
+featured: true
 image:
   caption: ''
   focal_point: ''
