@@ -38,7 +38,7 @@ Synthesised from *Start Your Own Restaurant and More: Pizzeria, Coffeehouse, Del
 #### 2.1 Web-crawling Sydney suburb list from Wikipedia
 Since the whole analysis is location-based, we should consider having detailed coordinates for all suburbs in Sydney. It is not hard to find the geojson file for all suburbs in NSW from the [government website](https://data.gov.au/dataset/ds-dga-91e70237-d9d1-4719-a82f-e71b811154c6/details). But, the challenge is to select those suburbs within Sydney metro area? Here, I used web-crawling method to scrap a list from Wikipedia using `requests` and `Beautifulsoup4`.
 
-```
+```python
 # There are four pages for the list, so we stored the web links for these four pages into `domain`
 headers = ({'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'})
 domain = []
@@ -69,11 +69,11 @@ It is very important to check the final table to see if any incorrect rows gener
 
 #### 2.2. Web-crawling Sydney demography and property median price by suburb
 After searching around for quite a while, I couldn’t find any available data tables of demography and property median price for all Sydney suburbs. I finally used web-crawling again to get demography data (population and age range) from [Domain](https://www.domain.com.au/suburb-profile/) and property median price data from [Realestate](https://www.realestate.com.au/neighbourhoods). These are two popular real estate websites in Australia. You may have noticed that the url structure for looking up a given suburb is just a combination of domain link, suburb name, nsw, and postcode.
-```
+```python
 url = 'https://www.domain.com.au/suburb-profile/{}-nsw-{}'.format(suburb,postcode)
 ```
 Here is an example of the main function I used for this task:
-```
+```python
 # Define a function for compiling info into array
 def getDemography(suburb_names, postcode_list, state='NSW'):
     Demography_list=[]
@@ -129,13 +129,13 @@ def getDemography(suburb_names, postcode_list, state='NSW'):
 It is never going to be perfect when scraping data from the web. That’s fine. The important thing is that we need to have our own assumption to predict the missing values based on different cases. In my case, there are missing values for population, age range, house-buying median price, house-renting median price, unit-buying median price, and unit-renting median price.
 
 After exploring the demography table, I found that the suburbs with missing values for either population or age range are normally remote suburbs and either have 60+ age range or 0 population. I then imputed all these two type of missing values accordingly. Like this:
-```
+```python
 sydney_demography_data[['Age']] = sydney_demography_data[['Age']].fillna('60+')
 ```
 The situation for property median price was a bit complex as shown in the linear regression figure. We have quite different linear relationships between different pairs.
-![Linear regression between two parameters](/first-project/index_files/linear-regression.png)
+![Linear regression between two parameters](./linear-regression.png)
 To simplify the issue, I decided to use house-buying median price as the index of property affordability. Since there is an apparent positive relationship between house-buying median price and house-renting median price, I built a simple linear model for these two parameters. This model was then used for predicting missing values for these two parameters.
-```
+```python
 new_data = []
 for x, y, i, k in zip(data_for_pred.House_buy, data_for_pred.House_rent, data_for_pred.Suburb, data_for_pred.Postcode):
     if y != 0:
@@ -147,7 +147,7 @@ for x, y, i, k in zip(data_for_pred.House_buy, data_for_pred.House_rent, data_fo
 ```
 #### Choropleth map for population, age range and property affordability
 At this stage, we have the data needed to address demographics and property affordability. Let’s put them on maps to have a clear view. Here is a example code for this task:
-```
+```python
 # Sydney latitude and longitude values
 latitude = -33.892319
 longitude = 151.146167
@@ -171,11 +171,11 @@ population_map.choropleth(
 population_map
 ```
 The maps look like this and they can be download from [here](https://github.com/Perishleaf/applied-data-science-capstone/blob/master/GeoJSON_and_choropleth_age.html).
-![Choropleth map for age range, population, and property affordability](/first-project/index_files/Choropleth-map.jpeg)
+![Choropleth map for age range, population, and property affordability](./Choropleth-map.jpeg)
 
 #### 2.5. Retrieve venues for all Sydney suburbs with Foursquare API
 With the final Sydney suburbs list, we are able to retrieve the venue list for each suburb using Foursquare API. Foursquare is a powerful database for location information. You basically just need to pass it with `radius`, `LIMIT`, `latitudes`, and `longitudes` to get venue list for a specific location within the defined radius. Note that you need to sign up for Foursquare API to have your own `CLIENT_ID` and `CLIENT_SECRET` to be able to use Foursquare's service. Its free version is enough for this type of analysis. Try it, you will like it. Here is the function I used for this task.
-```
+```python
 def getNearbyVenues(names, latitudes, longitudes, radius=500, LIMIT = 100):
     venues_list=[]
     for name, lat, lng in zip(names, latitudes, longitudes):
@@ -212,7 +212,7 @@ def getNearbyVenues(names, latitudes, longitudes, radius=500, LIMIT = 100):
 ```
 ### 3. DATA ANALYSIS
 Now the data are finally ready. Let’s take a look at the data. As we can see here, only 565 suburbs returned venues. This might be caused by the fact that the arbitrary choice of suburb centre is not the real suburb centre, we should find a better way to define suburb centre in the future. But overall, this list is closely resembles reality.
-```
+```python
 sydney_venues_num = sydney_venues.groupby('Suburb').count()
 sydney_venues_num = sydney_venues_num.drop(columns=['Suburb Latitude', 'Suburb Longitude', 'Venue Latitude', 'Venue Longitude', 'Venue Category'])
 sydney_venues_num = sydney_venues_num.sort_values(['Venue'], ascending=False).reset_index(drop=False)
@@ -245,7 +245,7 @@ Suburb    Venue
 19    Paddington    51
 ```
 As our task is to pick up some candidates from 698 suburbs, we may find it useful to first cluster these suburbs based on their top common venues. The idea behind this is to find suburbs featured with restaurants. This type of suburbs may provide stable customer source for a new establishment. I hence used k-mean clustering for this task:
-```
+```python
 # set number of clusters
 kclusters = 4
 sydney_grouped_clustering = sydney_grouped.drop('Suburb', 1)
@@ -261,7 +261,7 @@ plt.figure(figsize=(10,10))
 ax = sns.scatterplot(x="Population", y="House_buy/M", hue='Age', s=80,
                      data=sydney_demography_data_cluster[sydney_demography_data_cluster['Cluster Labels'] == 2])
 ```
-![Scatterplot to find candidate suburbs](static/post/first-project/index_files/Scatterplot.jpeg)
+![Scatterplot to find candidate suburbs](./Scatterplot.jpeg)
 As shown in the scatterplot, we can identify that there are 5 suburbs that met our requirements. They are Chatswood, Randwick, Marrickville, Parramatta, and Ryde, respectively. Further looking into the restaurant profile of these 5 suburbs, considering the diversity of restaurant types, both **Randwick** and **Chatswood** stand out. The diverse restaurant types within a given suburb may imply that the local customers are willing to try new things and hence provide relatively easy-to-survive operating environment for a new restaurant in our case.
 ```
 ----CHATSWOOD----

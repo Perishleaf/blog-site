@@ -28,21 +28,23 @@ And I assume you already have knowledge in using remote server/HPC/clusters (I w
 #### Creating conda environment for R and Python
 
 First, we can check the virtual environments that have been created by typing:
-```
+```bash
 conda info --envs
 ```
 
 All the conda environments have been created on the server should be listed. An asterisk will denote where you currently are, likely 'base'. In addition, your command line will be preceded with '(base)' to denote you are in the base conda environment. Something like this:
-```
+```bash
 (base) jun@server:~$
+```
 Next, I generated a specific R environment for R v3.5.1 (most recent version is R v3.6.1, but some of the packages I am using are not compatible with latest version).
+```bash
 conda create --name r_3.5.1 -c r r-base=3.5.1 r-essentials
 ```
 Here I named the env as `r_3.5.1` so that I know what this specific env is create for. It is a good habit to use informative name, otherwise you may forget its content when come back from a holiday. Conda then installed r-base v3.5.1 and r essential packages from r channel in env `r_3.5.1`. The packages include most commonly used r packages, like `ggplot2` and `tidyverse`.
 
 This took several minutes to finish, and you will see the following message:
 
-```
+```bash
 Preparing transaction: done
 Verifying transaction: done
 Executing transaction: done
@@ -57,12 +59,12 @@ Executing transaction: done
 ```
 
 Done. we now create a virtual environment specifically for R (v3.5.1). Let's try it by typing:
-```
+```bash
 conda activate r_3.5.1
 ```
 You will notice the command line will be preceded with (`r_3.5.1`). This indicates that we are now in the `r_3.5.1` environment. Then if you type R, you expect to see:
 
-```
+```R
 R version 3.5.1 (2018-07-02) -- "Feather Spray"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-apple-darwin13.4.0 (64-bit)
@@ -71,7 +73,7 @@ Platform: x86_64-apple-darwin13.4.0 (64-bit)
 This tells us that R is running and it is the correct version we required.
 
 Type `q()` to exit from R console. Then type `python` and you will find that python is also installed.
-```
+```python
 Python 3.7.5 (default, Oct 25 2019, 15:51:11)
 [GCC 7.3.0] :: Anaconda, Inc. on linux
 Type "help", "copyright", "credits" or "license" for more information.
@@ -79,16 +81,16 @@ Type exit() to exit from python console.
 ```
 
 Now we have both R and python installed in a virtual environment. We can now install jupyterlab (note that Jupyter notebook for R is included in the `r-essential` package, but we use `Jupyterlab` in this post. The same settings can be applied to Jupyter notebook as well)
-```
+```bash
 conda install -n r_3.5.1 -c conda-forge jupyterlab
 ```
 
 This code tells conda to install jupyterlab from `conda-forge` channel for `env r_3.5.1`. To lunch jupyterlab, type:
-```
+```bash
 jupyter-lab --no-browser
 ```
 This will prompt messages like this:
-```
+```bash
 from jupyter_client.session import Session
 [I 20:13:55.211 LabApp] JupyterLab extension loaded from /srv/home/jun/.conda/envs/r_3.5.1/lib/python3.7/site-packages/jupyterlab
 [I 20:13:55.211 LabApp] JupyterLab application directory is /srv/home/jun/.conda/envs/r_3.5.1/share/jupyter/lab
@@ -99,7 +101,7 @@ from jupyter_client.session import Session
 ```
 
 This means jupyterlab is running on your virtual environment. We will need this message (`http://localhost:8888/?token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`) for the second part of our settings. Note that the default port for Jupyter is 8888, but just in case other potential users on the same server is using this port, you may choose an arbitrary 4-digit number by typing:
-```
+```bash
 jupyter-lab --no-browser --port=xxxx
 ```
 to leave 8888 available. In my case, I still used 8888 as a example.
@@ -117,28 +119,28 @@ However, this is too much. There are 5 steps to complete the whole process.
 Can we compress all these 5 steps in one? Yes, we can.
 
 We first need to setup an SSH key-based authentication to connect to your server without entering a password by following this [post](https://linuxize.com/post/how-to-setup-passwordless-ssh-login/). Then on the server, we need to create a screen session for running the Jupyter by typing:
-```
+```bash
 screen -R jupyterlab-session
 ```
 This will attach a new screen on the server and you can detach it by pressing `control+A+D`, the screen will be still running in the background even after you log out the server. And next time when you log in to the same server, just type:
-```
+```bash
 screen -ls
 ```
 And you will see its screen ID (xxxx) and you then type:
-```
+```bash
 screen -r xxxx
 ```
 You will get into this screen again. I normally use this tool to run script that needs a long time to finish.
 
 Alright, the purpose to create a screen is to have a Jupyter session running constantly on the server whether you are logged in or not. Then you can connect to the existing session whenever you need. Inside this screen session, we type:
-```
+```bash
 conda activate r_3.5.1
 jupyter-lab --no-browser
 ```
 Let it run indefinitely. You can detach this screen by pressing `control+A+D` and log out.
 
 Then on your local computer, we need to put a bash function to your local `~/.bashrc` or `~/.bash_profile`. If you use this make sure to edit all the all-caps stuff with your own, like `USERNAME` and `HOSTNAME`. The function is copied from this [post](https://benjlindsay.com/posts/running-jupyter-lab-remotely).
-```
+```bash
 function jupyter-servername {
   port=8000 
   remote_username=USERNAME
