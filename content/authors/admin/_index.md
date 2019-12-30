@@ -14,8 +14,8 @@ education:
 email: ""
 interests:
 - Data Visualisation
-- Machine Learning
 - Statistics
+- Data Analytics
 name: Jun Ye
 organizations:
 - name: University of Queensland
