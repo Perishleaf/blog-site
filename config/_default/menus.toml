@@ -13,15 +13,15 @@
   url = "#blogs"
   weight = 20
 
-[[main]]
-  name = "RESEARCH"
-  url = "#research"
-  weight = 30
-
 #[[main]]
-#  name = "Publications"
-#  url = "#featured"
-#  weight = 40
+#  name = "RESEARCH"
+#  url = "#research"
+#  weight = 30
+
+[[main]]
+  name = "PUBLICATIONS"
+  url = "#publications"
+  weight = 30
 
 #[[main]]
 #  name = "Courses"
