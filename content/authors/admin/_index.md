@@ -34,6 +34,9 @@ social:
 - icon: github
   icon_pack: fab
   link: https://github.com/Perishleaf
+- icon: linkedin
+  icon_pack: fab
+  link: https://www.linkedin.com/in/jun-ye-29aaa769/
 superuser: true
 user_groups:
 - Researchers
