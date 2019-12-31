@@ -40,4 +40,8 @@ user_groups:
 - Visitors
 ---
 
-I received my Ph.D. from University of New South Wales. I am passionate to deal with complex data and apply data insights to tell stories and solve problems. I am enthusiastic about leveraging methods from modern statistics and data visualisation to decipher patterns from intertwined datasets. I also have a strong interest in machine learning.
+I grew up in [Jingdezhen](https://en.wikipedia.org/wiki/Jingdezhen_porcelain) (景德镇), a small city in China. In 2012, I received a postgraduate scholarship and made one of the biggest decisions in my life and came to Australia to start a PhD degree.
+
+In 2016, I completed my Ph.D. from University of New South Wales. I love dealing with complex data and it's my passion to apply data insights to tell stories and solve problems. I am enthusiastic about leveraging methods of modern statistics and data visualisation to identify patterns from intertwined datasets. I also have a strong interest in machine learning.
+
+I am currently living and working in Sydney, Australia.
