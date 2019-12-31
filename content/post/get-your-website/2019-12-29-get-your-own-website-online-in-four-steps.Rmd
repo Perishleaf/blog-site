@@ -33,15 +33,15 @@ I like to collect blog websites that have nice design or interesting topics. Not
 #### | *"I web, therefore I am"*
 
 ####
-My understanding for this phrase has two folders: 1) having your own website makes you keeping track of what you have done and thought as all contents on your website are under your own control. 2) most importantly, it largely expands the chance for people to know you. You can showcase your work to prospective employers more effectively. This is extremely helpful for people looking for [tech-related jobs](https://medium.com/r/?url=https%3A%2F%2Ftowardsdatascience.com%2Fhow-to-get-hired-as-an-entry-level-data-scientist-when-you-dont-already-have-3-years-experience-476394f2cc2c). Taken together, I think it is time to make my long-term imagination to a real thing.
+My understanding for this phrase has two folders: 1) having your personal website makes you keeping track of what you have done and thought as all contents on your website are under your own control. 2) most importantly, it largely expands the chance for people to know you. You can showcase your work to prospective employers more effectively. This is extremely helpful for people looking for [tech-related jobs](https://medium.com/r/?url=https%3A%2F%2Ftowardsdatascience.com%2Fhow-to-get-hired-as-an-entry-level-data-scientist-when-you-dont-already-have-3-years-experience-476394f2cc2c). Taken together, I think it is time to make my long-term imagination to a real thing.
 
-In this post, I will share my notes in creating [my own website](https://junye0798.com/#resume) using `blogdown`, which is the tool built to significantly simplify the whole processes from creating a website to updating the website. This post basically comprises four parts:
+In this post, I will share my notes in creating [my personal website](https://junye0798.com/#resume) using `blogdown`, which is the tool built to significantly simplify the whole processes from creating a website to updating the website. This post basically comprises four parts:
 
 **Create new repo on [Github](https://github.com/) → Build website in [RStudio](https://rstudio.com/) → Deploy website using [Netlify](https://www.netlify.com/) → Customise domain name**
 
 ### Create new repo on Github
 Since [Netlify](https://www.netlify.com/) (a static website service) will automatically render your website via the github source repository, we need to first create a new repository for your github account to host all source files of your website.
-![Create a public repository for your website](./create-repo.png)
+![Create a public repository for your website](/get-your-website/2019-12-29-get-your-own-website-online-in-four-steps_files/create-repo.png)
 After this, let's create a local version of this repository on your machine. This is called cloning. To do that, click the green "Clone or download" button in your repository site and click the copy icon to copy the repository URL (Clone with SSH) to the clipboard buffer . Then, back to the Terminal (I am using Mac), and navigate to the directory where you want the local version of the repository to reside. Run the following in Terminal:
 ```bash
 git clone <repository_URL>
@@ -59,7 +59,8 @@ devtools::install_github("rstudio/blogdown")
 blogdown::install_hugo()
 ```
 Then let's create a new project in RStudio for your website. Select `File` > `New Project` > `Existing Directory`, then browse to directory where the GitHub repository is and click on the **Create Project** button.
-![Create a R project in RStudio](./R-project.png)
+![Creat a R project in RStudio](/get-your-website/2019-12-29-get-your-own-website-online-in-four-steps_files/R-project.png)
+
 RStudio will open a new session with this newly created project. We now need to edit the `.gitignore file`. You can find it from the file viewer panel in RStudio (normally locates at lower-right panel, `Files` tab). Click the file to open it in RStudio and edit the content as follow:
 ```R
 .Rproj.user
