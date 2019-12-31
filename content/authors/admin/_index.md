@@ -10,6 +10,9 @@ education:
   - course: MSc in Agricultural Science
     institution: Shanghai Jiao Tong University
     year: 2012
+  - course: BSc in Agricultural Science
+    institution: Jilin Agricultural University
+    year: 2009
   
 email: ""
 interests:
@@ -19,7 +22,7 @@ interests:
 name: Jun Ye
 organizations:
 - name: University of Queensland
-  url: "https://www.uq.edu.au/"
+  url: "https://ecogenomic.org/"
 role: Research Fellow @ Australian Centre for Ecogenomics
 social:
 - icon: envelope
@@ -37,16 +40,19 @@ social:
 - icon: linkedin
   icon_pack: fab
   link: https://www.linkedin.com/in/jun-ye-29aaa769/
+- icon: medium
+  icon_pack: fab
+  link: https://medium.com/@jun_ye/
 superuser: true
 user_groups:
 - Researchers
 - Visitors
 ---
 
-I grew up in [*Jingdezhen*](https://en.wikipedia.org/wiki/Jingdezhen_porcelain) (景德镇), a small city in China. In 2012, I received a postgraduate scholarship and made one of the biggest decisions in my life and came to Australia to start a PhD degree.
+I grew up in [**Jingdezhen**](https://en.wikipedia.org/wiki/Jingdezhen_porcelain) (景德镇), a small city in China. In 2012, I received a postgraduate scholarship and made one of the biggest decisions in my life and came to Australia to start a PhD degree.
 
-In 2016, I completed my Ph.D. from University of New South Wales. Since then, I have been working as a Postdoctral Research Fellow at the Australian Centre for Ecogenomics. My research is to identify environmentally and biotechnologically important microbial communities using high-throughput DNA sequence data.
+In 2016, I completed my Ph.D. from University of New South Wales. Since then, I have been working as a Postdoctral Research Fellow at the Australian Centre for Ecogenomics. My research is to identify environmentally and biotechnologically important microbial communities using high-throughput DNA sequence data. In my spare time, I am also a writer in [**Toward Data Science**](https://towardsdatascience.com/), where I share good coding and data analysis practices in broad topics. 
 
-I love dealing with complex data and it's my passion to apply data insights to tell stories and solve problems. I am enthusiastic about leveraging methods of modern statistics and data visualisation to extract patterns from intertwined datasets. I also have a strong interest in machine learning.
+I love dealing with complex data and it's my passion to apply data insights to tell stories and solve problems. I am enthusiastic about leveraging methods of modern statistics and data visualisation to extract patterns from intertwined datasets. I also have a strong interest in machine learning. 
 
 I am currently living and working in Sydney, Australia.
