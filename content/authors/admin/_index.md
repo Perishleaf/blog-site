@@ -49,11 +49,11 @@ user_groups:
 - Visitors
 ---
 
-Nice to meet you here!
+Welcome to my site!
 
 I grew up in [**Jingdezhen**](https://en.wikipedia.org/wiki/Jingdezhen) (景德镇 /ˈdʒɪŋˈdɛdʒɛn/), a small city in China. In 2012, I received a postgraduate scholarship and made one of the biggest decisions in my life and came to Australia to start a PhD degree.
 
-In 2016, I completed my Ph.D. from University of New South Wales. Since then, I have been working as a Postdoctral Research Fellow at the Australian Centre for Ecogenomics. My research is to identify environmentally and biotechnologically important microbial communities using high-throughput DNA sequence data. In my spare time, I am also a writer in [**Toward Data Science**](https://towardsdatascience.com/), where I share good coding and data analysis practices in broad topics. 
+In 2016, I completed my Ph.D. from University of New South Wales. Since then, I have been working as a Postdoctoral Research Fellow at the Australian Centre for Ecogenomics. My research is to identify environmentally and biotechnologically important microbial communities using high-throughput DNA sequence data. In my spare time, I am also a writer in [**Toward Data Science**](https://towardsdatascience.com/), where I share good coding and data analysis practices in broad topics. 
 
 I love dealing with complex data and it's my passion to apply data insights to tell stories and solve problems. I am enthusiastic about leveraging methods of modern statistics and data visualisation to extract patterns from intertwined datasets. I also have a strong interest in machine learning. 
 

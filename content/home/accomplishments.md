@@ -2,7 +2,7 @@
 # Accomplishments widget.
 widget = "accomplishments"  # See https://sourcethemes.com/academic/docs/page-builder/
 headless = true  # This file represents a page section.
-active = false  # Activate this widget? true/false
+active = true  # Activate this widget? true/false
 weight = 50  # Order that this section will appear.
 
 title = "Accomplish&shy;ments"
@@ -21,31 +21,10 @@ date_format = "Jan 2006"
 [[item]]
   organization = "Coursera"
   organization_url = "https://www.coursera.org"
-  title = "Neural Networks and Deep Learning"
-  url = ""
-  certificate_url = "https://www.coursera.org"
-  date_start = "2018-10-01"
+  title = "IBM Data Science Professional Certificate"
+  url = "https://www.coursera.org/professional-certificates/ibm-data-science"
+  certificate_url = "https://www.coursera.org/account/accomplishments/specialization/25STCPETSYRK"
+  date_start = "2019-09-01"
   date_end = ""
-  description = ""
-
-[[item]]
-  organization = "edX"
-  organization_url = "https://www.edx.org"
-  title = "Blockchain Fundamentals"
-  url = "https://www.edx.org/professional-certificate/uc-berkeleyx-blockchain-fundamentals"
-  certificate_url = "https://www.edx.org"
-  date_start = "2018-03-01"
-  date_end = ""
-  description = "Formulated informed blockchain models, hypotheses, and use cases."
-  
-[[item]]
-  organization = "DataCamp"
-  organization_url = "https://www.datacamp.com"
-  title = "Object-Oriented Programming in R: S3 and R6 Course"
-  url = ""
-  certificate_url = "https://www.datacamp.com"
-  date_start = "2017-07-01"
-  date_end = "2017-12-21"
-  description = ""
-
+  description = "This program consists of 9 courses providing the latest job-ready skills and techniques covering a wide array of data science topics including: open source tools and libraries, methodologies, Python, databases, SQL, data visualization, data analysis, and machine learning. All hands-on are practiced in the IBM Cloud using real data science tools and real-world data sets."
 +++
