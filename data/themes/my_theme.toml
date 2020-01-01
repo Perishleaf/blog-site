@@ -5,16 +5,16 @@ name = "my_theme"
 light = true
 
 # Primary
-primary = "#FF8A43"
+primary = "#4ba67f"
 
 # Menu
 menu_primary = "#FEFFFF"
-menu_text = "#000000"
-menu_text_active = "#FF8A43"
-menu_title = "#000000"
+menu_text = "#292929"
+menu_text_active = "#4ba67f"
+menu_title = "#292929"
 
 # Home sections
 background = "#FEFFFF"
 home_section_odd = "#FEFFFF"
 home_section_even = "#F6F6F6"
-font = "#000000"
+font = "#292929"

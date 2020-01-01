@@ -2,10 +2,10 @@
 name = "my_font"
 
 # Optional Google font URL
-google_fonts = "Poppins:400,700|Roboto:400,300italic,700|Roboto+Mono"
+google_fonts = "Gelasio:400,500,700|Roboto:300,300italic,400,700|Roboto+Mono"
 
 # Font families
-heading_font = "Poppins"
-body_font = "Roboto"
+heading_font = "Gelasio"
+body_font = "Gelasio"
 nav_font = "Roboto"
 mono_font = "Roboto Mono"
