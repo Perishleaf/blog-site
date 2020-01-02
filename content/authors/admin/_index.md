@@ -39,7 +39,7 @@ social:
   link: https://github.com/Perishleaf
 - icon: linkedin
   icon_pack: fab
-  link: https://www.linkedin.com/in/jun-ye-29aaa769/
+  link: https://www.linkedin.com/in/jun-ye-0798/
 - icon: medium
   icon_pack: fab
   link: https://medium.com/@jun_ye/
