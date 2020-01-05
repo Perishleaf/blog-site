@@ -5,7 +5,7 @@ categories:
 - Post
 date: "2019-12-15T00:00:00Z"
 draft: false
-featured: ture
+featured: true
 image:
   caption: ''
   focal_point: ""

@@ -9,6 +9,8 @@ featured: true
 image:
   caption: ""
   focal_point: ""
+  placement: 2
+  preview_only: false
 lastMod: "2019-12-23T00:00:00Z"
 projects: []
 subtitle: Visualisation of Sydney Property Median Price by Suburbs

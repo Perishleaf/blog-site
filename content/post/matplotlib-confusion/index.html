@@ -1,0 +1,133 @@
+---
+title: plt.xxx(), or ax.xxx(), That Is The Question In Matplotlib
+author: Jun Ye
+date: '2020-01-05'
+slug: plt-xxx-or-ax-xxx-that-is-the-question-in-matplotlib
+categories:
+  - Post
+tags:
+  - Data Visualisation
+  - Matplotlib
+subtitle: "A beginner's advice for learning matplotlib"
+summary: ''
+authors: 
+- admin
+lastmod: '2020-01-05T13:26:11+10:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  placement: 2
+  preview_only: false
+projects: []
+---
+
+
+
+<p>As a newbie converted recently from using R to Python, data visualisation via the standard Python visualisation library matplotlib is an inevitable part through the learning process. At the very beginning, after following several easy-to-find matplotlib tutorials, I had an impression that “en, it’s not as hard as I thought”. After <code>import matplotlib.pyplot as plt</code>, I can basically plot everything by calling <code>plt.xxx(…)</code> (e.g. <code>plt.plot(…)</code>, <code>plt.scatter(…)</code>, <code>plt.bar(…)</code>, <code>plt.xlabel(…)</code>, <code>plt.ylabel(…)</code>, <code>plt.legend(…)</code>, etc.). When it comes to some detailed adjustments, Stackoverflow is the place-to-go for answers. Very often, I just need to copy-paste the solution without even reading the issue description, which people call this as <strong>Stackoverflow Syndrome</strong>. However, as the plots getting complex, I found that there are always many different ways to solve a specific issue in matplotlib. For example, you may find that these functions, <code>plt.title(…)</code>, <code>ax.set_title(…)</code>, and <code>ax.title.set_text(…)</code>, can all set title for a plot. I am so overwhelmed every time when this kind of situation happened. Isn’t <code>plt.xxx()</code> a one-size-fits-all method? where does <code>ax.xxx()</code> come from?</p>
+<blockquote>
+<p><em>“plt.xxx(), or ax.xxx(), That Is The Question.”</em></p>
+</blockquote>
+<p>I hence realised that copy-pasting solution is never going to make me master <code>matplotlib</code>. I need to know the architecture of <code>matplotlib</code> and how it plots. If you are a beginner of <code>matplotlib</code> and experienced similar situation just like me, this is the post for you. In this post, I will share my notes about:</p>
+<ol style="list-style-type: decimal">
+<li>the difference between <code>plt.xxx()</code> and <code>ax.xxx()</code> in matplotlib,</li>
+<li>in matplotlib, <code>figure</code> is not only a figure and <code>axes</code> is not a plural word of axis ,</li>
+<li>plot an example figure using these two methods, respectively.</li>
+</ol>
+<p>I hope this post can answer some your long-standing confusions and will save you time in learning <code>matplotlib</code>.</p>
+<hr />
+<div id="difference-between-plt.xxx-andax.xxx" class="section level4">
+<h4>Difference between plt.xxx() and ax.xxx()</h4>
+<p>As shown in Figure 1, there are three main layers in <code>matplotlib</code> architecture. From top to bottom, they are <strong>Scripting layer</strong> (<code>matplotlib.pyplot module</code>), <strong>Artist layer</strong> (<code>matplotlib.artist module</code>), and <strong>Backend layer</strong> (<code>matplotlib.backend_bases module</code>), respectively. <img src="matplotlib-structure.png" alt="Figure 1, Matplotlib architecture" /></p>
+<p>Let’s start from the bottom, the Backend layer handles all the heavy works via communicating to the toolkits like wxPython or drawing languages like PostScript in your machine. It is the most complex layer. Within this layer, <code>FigureCanvas</code> is the area onto which the figure is drawn and <code>Renderer</code> is the object which knows how to draw on the <code>FigureCanvas</code>. A regular user like you and me barely need to deal with this layer.</p>
+<p>Then the middle layer, <strong>Artist layer</strong>, where <code>ax.xxx()</code> derives from. As the name implies, using this layer, you can control and fine-tune as many elements (e.g. tick direction, tick label size, tick label font, tick colour etc.) as possible in the <code>figure</code> just like an artist paints on the canvas. This layer allows you to do more customisation compare to <strong>Scripting layer</strong> (see below) and more convenient for advanced plots. Especially when handling multiple figures/axes, you will not get confused as to which one is currently active since every subplot is assign to an <code>ax</code>. This is why <code>ax.xxx()</code> is sometimes referred to <strong>object-based plotting</strong>. We definitely will use this layer more often when writing a web application, or a UI application, or perhaps a script to be shared with other developers.</p>
+<p>The top layer, <strong>Scripting layer</strong>, where <code>plt.xxx()</code> resident is designed to make <code>matplotlib</code> work like MATLAB script. In other words, this layer is considered as the lightest scripting interface among all three layers, which comprises a collection of command style functions for a quick and easy generation of graphics and plots. This is why many <code>matplotlib</code> tutorials prefer to introduce from this layer. It is the easiest part to start with and use, you basically add up objects (e.g. line, text, rectangle) on top of the figure. Scripting layer plotting is sometimes also called <strong>procedural plotting</strong>. <img src="scripting-layer.png" alt="Figure 2, Scripting layer plotting" /></p>
+</div>
+<div id="figure-and-axes-in-matplotlib" class="section level4">
+<h4>‘figure’ and ‘axes’ in Matplotlib</h4>
+<p>In <code>matplotlib</code>, <code>figure</code> and <code>axes</code> are layers of a figure (please note that I do not quote this “figure” as a script). Here let’s use a figure from matplotlib website to explain the concepts. <img src="fig_map.png" alt="Figure 3, Parts of a figure in Matplotlib" /> As we can see from Figure 3, the whole <code>figure</code> (marked as the outer red box) is the base of a figure. The layer above it is the <code>axes</code> (marked as the inner blue box). A figure can at least have one <code>axes</code>. From here we know that, <code>axes</code> refers to a part of the figure and is not a plural word for more than one axis. For instance, if you have one plot on a <code>figure</code>, then that plot is the <code>axes</code>. If you have multiple subplots on a <code>figure</code>, then each subplot is one <code>axes</code>. To be able to make a plot, we always call <code>fig = plt.figure()</code> at the beginning. We create one <code>axes</code> object in the <code>figure</code> by calling <code>ax1 = fig.add_subplot(2, 1, 1)</code>. This created the first subplot within a 2-row by 1-column <code>figure</code>. Therefore, all <code>ax1.xxx(…)</code> are functions specifically for <code>ax1</code>. For example, to access x-axis and y-axis in the subplot <code>ax1</code>, we call <code>ax1.xaxis(…)</code> and <code>ax1.yaxis(…)</code>. Likewise, we can add another subplot by calling <code>ax2 = fig.add_subplot(2, 1, 2)</code> and manipulating its elements by calling <code>ax2.xxx(…)</code>. In this way, we have a clear idea about which subplot we are working on without messing up the code.</p>
+</div>
+<div id="a-example-plot-with-two-methods" class="section level4">
+<h4>A example plot with two methods</h4>
+<p>Alright, after clarifying the concepts of <code>plt.xxx()</code> and <code>ax.xxx()</code>, let’s use a simple example adapted from <a href="https://matplotlib.org/examples/pylab_examples/axes_demo.html">matplotlib document</a> to demonstrate their differences when plotting figure with subplots.</p>
+<pre class="python"><code>import matplotlib.pyplot as plt
+import numpy as np
+
+# set up a seed to make the random result reproducible
+np.random.seed(seed=666)
+
+# create some data to use for the plot
+dt = 0.001
+t = np.arange(0.0, 10.0, dt)
+r = np.exp(-t[:1000]/0.05) # impulse response
+x = np.random.randn(len(t))
+s = np.convolve(x, r)[:len(x)]*dt  # colored noise
+
+# the main axes is subplot(111) by default
+plt.plot(t, s)
+plt.axis([0, 1, 1.1*np.amin(s), 2*np.amax(s)])
+plt.xlabel(&#39;time (s)&#39;)
+plt.ylabel(&#39;current (nA)&#39;)
+plt.title(&#39;Gaussian colored noise&#39;)
+
+# this is an inset axes over the main axes
+a = plt.axes([.65, .6, .2, .2], facecolor=&#39;y&#39;)
+n, bins, patches = plt.hist(s, 400, density=1)
+plt.title(&#39;Probability&#39;)
+plt.xticks([])
+plt.yticks([])
+
+# this is another inset axes over the main axes
+a = plt.axes([0.2, 0.6, .2, .2], facecolor=&#39;y&#39;)
+plt.plot(t[:len(r)], r)
+plt.title(&#39;Impulse response&#39;)
+plt.xlim(0, 0.2)
+plt.xticks([])
+plt.yticks([])
+
+plt.show()</code></pre>
+<pre class="python"><code>import matplotlib.pyplot as plt
+import numpy as np
+
+# set up a seed to make the random result reproducible
+np.random.seed(seed=666)
+
+# create some data to use for the plot
+dt = 0.001
+t = np.arange(0.0, 10.0, dt)
+r = np.exp(-t[:1000]/0.05) # impulse response
+x = np.random.randn(len(t))
+s = np.convolve(x, r)[:len(x)]*dt  # colored noise
+
+# set up subplot axes
+fig = plt.figure()
+ax1 = fig.add_subplot(1, 1, 1)
+ax2 = fig.add_axes([0.2, 0.6, .2, .2], facecolor=&#39;y&#39;)
+ax3 = fig.add_axes([.65, .6, .2, .2], facecolor=&#39;y&#39;)
+
+# the main axes 
+ax1.plot(t, s)
+ax1.axis([0, 1, 1.1*np.amin(s), 2*np.amax(s)])
+ax1.set_xlabel(&#39;time (s)&#39;)
+ax1.set_ylabel(&#39;current (nA)&#39;)
+ax1.set_title(&#39;Gaussian colored noise&#39;)
+
+# this is another inset axes over the main axes
+ax2.plot(t[:len(r)], r)
+ax2.set_title(&#39;Impulse response&#39;)
+ax2.set_xlim(0, 0.2)
+ax2.set_xticks([])
+ax2.set_yticks([])
+
+# this is an inset axes over the main axes
+n, bins, patches = ax3.hist(s, 400, density=1)
+ax3.set_title(&#39;Probability&#39;)
+ax3.set_xticks([])
+ax3.set_yticks([])
+
+fig.canvas.draw()</code></pre>
+<p>If everything goes right, you will get the following figure. <img src="example.png" alt="Figure 4, A example figure" /> As you can see from these two scripts (<strong>Scripting layer plotting</strong> <em>vs.</em> <strong>Artist layer plotting</strong>), although the code of artist layer plotting is more verbose than that of scripting layer plotting, it is easier to read. This is a very important practice to let you produce quality code and increase the readability of your code. When the plots getting complicated, the power of artist layer plotting will become more and more apparent.</p>
+<p>Taken together, we may use <code>plt.xxx()</code> to quickly get a plot for exploratory data analysis, however, <code>ax.xxx()</code> is a go-to style when your code is part of a serious project and need to be shared with others. In addition, as a learner of matplotlib, I strongly advise starting from artist layer plotting, from which you will have a more comprehensive understanding about <code>matplotlib</code> plotting and definitely benefit more for your long-term development in data visualisation.</p>
+<hr />
+<p>As always, I welcome feedback, constructive criticism, and hearing about your data science projects. I can be reached on <a href="https://www.linkedin.com/in/jun-ye-29aaa769/">Linkedin</a>, and now on my <a href="https://junye0798.com/">website</a> as well.</p>
+</div>
