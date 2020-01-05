@@ -58,6 +58,7 @@ As we can see from Figure 3, the whole `figure` (marked as the outer red box) is
 Alright, after clarifying the concepts of `plt.xxx()` and `ax.xxx()`, let’s use a simple example adapted from [matplotlib document](https://matplotlib.org/examples/pylab_examples/axes_demo.html) to demonstrate their differences when plotting figure with subplots.
 
 Code of scripting layer plotting 
+
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
@@ -98,6 +99,7 @@ plt.show()
 ```
 
 Code of artist layer plotting
+
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
