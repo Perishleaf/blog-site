@@ -28,7 +28,7 @@ As a newbie converted recently from using R to Python, data visualisation via th
 
 I hence realised that copy-pasting solution is never going to make me master `matplotlib`. I need to know the architecture of `matplotlib` and how it plots. If you are a beginner of `matplotlib` and experienced similar situation just like me, this is the post for you. In this post, I will share my notes about:
 
-1. the difference between `plt.xxx()` and `ax.xxx()` in matplotlib,
+1. the difference between `plt.xxx()` and `ax.xxx()` in `matplotlib`,
 2. in matplotlib, `figure` is not only a figure and `axes` is not a plural word of axis ,
 3. plot an example figure using these two methods, respectively.
 
