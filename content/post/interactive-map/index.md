@@ -33,11 +33,11 @@ Install `plotly`, `dash`, and `pandas` on the system. I created a virtual enviro
 ```bash
 conda create -n <whatever name you want for this env> -c plotly plotly=4.4.1 -c conda-forge dash pandas
 ```
-To be able to draw a map in plotly, we also need a token from Mapbox, which provides various nice map styles and most importantly is for free. In addition, two datasets were used in this dashboard and they can be download from my [github](https://github.com/Perishleaf/data-visualisation-scripts) (← You can also find the dash app code here).
+To be able to draw a map in plotly, we also need a token from Mapbox, which provides various nice map styles and most importantly is for free. In addition, two datasets were used in this dashboard and they can be download from my [github](https://github.com/Perishleaf/data-visualisation-scripts/tree/master/dash_project_medium) (← You can also find the dash app code here).
 
 ### Bullet train path
 
-If you want to explore the dash app now, after finishing above steps, you need to assign your Mapbox token to mapbox_accesstoken in this [script](https://github.com/Perishleaf/data-visualisation-scripts/blob/master/dash_project_medium.py) and run it in the same directory with the two datasets. Once the following message popped up, just open this address http://127.0.0.1:8050/ in your preferred browser and dash will be loading in there.
+If you want to explore the dash app now, after finishing above steps, you need to assign your Mapbox token to mapbox_accesstoken in this [script](https://github.com/Perishleaf/data-visualisation-scripts/blob/master/dash_project_medium/dash_project_medium.py) and run it in the same directory with the two datasets. Once the following message popped up, just open this address http://127.0.0.1:8050/ in your preferred browser and dash will be loading in there.
 ```bash
 $ python dash_project_medium.py
   Running on http://127.0.0.1:8050/
