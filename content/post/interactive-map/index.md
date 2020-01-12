@@ -10,7 +10,7 @@ image:
   caption: ""
   focal_point: ""
   placement: 2
-  preview_only: false
+  preview_only: yes
 lastMod: "2019-12-23T00:00:00Z"
 projects: []
 subtitle: Visualisation of Sydney Property Median Price by Suburbs
@@ -23,7 +23,7 @@ tags:
 - Python3
 title: Build an Interactive Choropleth Map with Plotly and Dash
 ---
-
+![](./example.gif)
 Last week, I finished my final assignment in IBM Data Science course, which is to find an ideal suburb for opening an Italian restaurant based on location data. During the process, I web-scrapped property median price (i.e. House buy/rent and Unit buy/rent) for each suburb in Sydney and plotted them on Choropleth maps, respectively.
 
 However, I was wondering if it is possible to combine all these maps in one and select one of them just by clicking name from a dropdown menu. In addition, I want to add one more plot next to the map to show the top 10 suburbs with the highest median prices accordingly. These add-ons will make the map more informative and user-friendly. In this post, I will share my notes about how to create an interactive dashboard with a choropleth map and bar plot using Plotly and Dash. In addition, I assume that you have prior experience with Plotly.
