@@ -1,6 +1,6 @@
 ---
 title: How To Visualise Sydney’s Temperature Change from 1859 to 2019 Using Matplotlib
-author: admin
+author: Jun Ye
 date: '2020-01-12'
 slug: how-to-visualise-sydney-s-temperature-change-from-1859-to-2019-using-matplotlib
 categories:
@@ -10,7 +10,8 @@ tags:
   - Matplotlib
 subtitle: 'A detailed guide to make an animated plot'
 summary: ''
-authors: []
+authors:
+  - admin
 lastmod: '2020-01-12T19:46:49+11:00'
 featured: yes
 image:
