@@ -1,8 +1,8 @@
 ---
-title: How Many Ways To Call Axes In Matplotlib
+title: The Many Ways To Call Axes In Matplotlib
 author: Jun Ye
 date: '2020-01-17'
-slug: how-many-ways-to-call-axes-in-matplotlib
+slug: the-many-ways-to-call-axes-in-matplotlib
 categories:
   - Post
 tags:
