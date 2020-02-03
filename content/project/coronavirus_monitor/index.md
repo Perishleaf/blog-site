@@ -13,7 +13,7 @@ links:
   icon_pack: fab
   name: Plotly, Dash
   url: 
-summary: A dashboard built to track the spread of recent outbreak coronavirus (2019-nCoV). From this dashboard, you can have a real-time overview of the numbers of global coronavirus cases, including confirmed, recovered and deaths cases, and their distribution on a world map.
+summary: A dashboard built to track the spread of recent outbreak coronavirus (2019-nCoV). 
 tags:
 - Dashboard
 - Plotly

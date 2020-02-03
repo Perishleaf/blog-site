@@ -3,7 +3,7 @@ date: "2020-01-27T00:00:00Z"
 external_link: ""
 image:
   caption: A infographic for temperature patterns
-  focal_point: Smart
+  focal_point: Center
 links:
 - icon: github
   icon_pack: fab
