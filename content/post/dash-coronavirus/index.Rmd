@@ -36,6 +36,10 @@ As usual, you can access all required data and the jupyter notebook from [my Git
 
 ---
 
+> A dashboard is a visual display of the most important information needed to achieve one or more objectives; consolidated and arranged on a single screen so the information can be monitored at a glance 
+>
+> -Stephen Few
+
 ### Framework
 To help you understand the codes (you can find the codes from app.py) quickly, let me first declare the logic behind them. Generally, the framework (i.e. my thinking process) in building this dashboard application via `dash` followed: **Data preparation** -> **Dashboard layout determination** -> **Content generation and insertion**, despite that you may find the third part happened before the second part in the code. That is the way Python read the codes, not us. Bear this framework in mind and let’s dive into these codes.
 

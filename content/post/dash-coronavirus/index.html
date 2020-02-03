@@ -32,6 +32,10 @@ projects: []
 <p>In this post, I will dissect the codes of a dashboard, which I built to track the spread of recent outbreak coronavirus (2019-nCoV). <a href="https://dash-coronavirus-2020.herokuapp.com/">From this dashboard</a>, you can have a real-time overview of the numbers of global coronavirus cases, including confirmed, recovered and deaths cases, and their distribution on a world map.</p>
 <p>As usual, you can access all required data and the jupyter notebook from <a href="https://github.com/Perishleaf/data-visualisation-scripts/tree/master/dash-2019-coronavirus">my Github</a>. Since it is still under active development, the version used in this post may differ from what you downloaded. In addition, please feel free to provide your suggestions or help to make this dashboard more useful and accurate.</p>
 <hr />
+<blockquote>
+<p>A dashboard is a visual display of the most important information needed to achieve one or more objectives; consolidated and arranged on a single screen so the information can be monitored at a glance</p>
+<p>-Stephen Few</p>
+</blockquote>
 <div id="framework" class="section level3">
 <h3>Framework</h3>
 <p>To help you understand the codes (you can find the codes from app.py) quickly, let me first declare the logic behind them. Generally, the framework (i.e. my thinking process) in building this dashboard application via <code>dash</code> followed: <strong>Data preparation</strong> -&gt; <strong>Dashboard layout determination</strong> -&gt; <strong>Content generation and insertion</strong>, despite that you may find the third part happened before the second part in the code. That is the way Python read the codes, not us. Bear this framework in mind and let’s dive into these codes.</p>
