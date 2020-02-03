@@ -37,9 +37,12 @@ Alright, without further ado, let’s now dive into the code and show you how I 
 ---
 
 ### Define the goal and collect data
+
 Although this is not within the scope of this post, I list this section to highlight that it is the fundamental part of making an effective infographic. Only if you know what story to tell, you have a direction for gathering data and thinking about design, layout, charts, and aesthetics. As for our case, weather data is downloaded from the [Australian Bureau of Meteorology website](http://www.bom.gov.au/). We only need daily maximum temperature, city name and date values (*i.e. **max_tmp_day**, **City**, and **Date** as shown in Figure 1*).
 ![Figure 1](./Figure1.png)
+
 ### Layout
+
 As stated in my previous [post](https://towardsdatascience.com/the-many-ways-to-call-axes-in-matplotlib-2667a7b06e06), `fig.add_axes([left, bottom, width, height])` is a good way to manually place `axes` on `fig`. However, it is tedious to accurately calculate coordinates for each `axes` on the `fig` when we have lots of `axe`s (*we have 18 `axes` in total*) and alignment is required (*Our eyes are very picky, even slight misalignments will throw things off balance*). I hence adopted a mixture of **common layout** and **arbitrary layout** of `axes` on `fig`. using `fig.add_gridspec()` and `fig.add_axes()`. Here, `fig.add_gridspec()` is a function that enable us to specify the geometry of the grid that a `axes` will be placed. For example, imagine a 2 rows by 2 columns grid on a `fig`, normally if we use `fig.subplots(nrows=2, ncols=2)`, this will generate four `axes` that distributed evenly on the 2 by 2 grid. What if, on the 2 by 2 grid, we only need 3 `axes` that the first `axes` occupies the whole first row and the remaining 2 `axes` occupy the second row evenly? The power of `fig.add_gridspec()` comes in here, which enable us to create `axes` spanned rows and columns as desired. We can achieve the aforementioned layout as follow:
 
 ```python

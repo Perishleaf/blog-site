@@ -9,24 +9,24 @@
   weight = 10
 
 [[main]]
-  name = "ACCOMPLISHMENT"
-  url = "#accomplishments"
-  weight = 15
+  name = "PROJECT"
+  url = "#projects"
+  weight = 20
 
 [[main]]
   name = "BLOG"
   url = "#blogs"
-  weight = 20
+  weight = 30
 
-#[[main]]
-#  name = "RESEARCH"
-#  url = "#research"
-#  weight = 30
+[[main]]
+  name = "ACCOMPLISHMENT"
+  url = "#accomplishments"
+  weight = 35
 
 [[main]]
   name = "PUBLICATIONS"
   url = "#publications"
-  weight = 30
+  weight = 40
 
 #[[main]]
 #  name = "PHOTOGRAPHY"
