@@ -18,7 +18,7 @@ featured: yes
 image:
   caption: ''
   focal_point: ''
-  placement: 2
+  placement: 3
   preview_only: false
 projects: []
 ---
@@ -86,12 +86,9 @@ ax = fig.add_axes([0, 0, 0.78, 0.78])</code></pre>
 <div id="figure-with-multiple-axes" class="section level3">
 <h3><code>figure</code> with multiple <code>axes</code></h3>
 <p>When it comes to plotting multiple <code>axes</code> on <code>figure</code>, the differences among these functions (i.e. <code>plt.subplot()</code>, <code>plt.subplots()</code>, <code>plt.axes()</code>, <code>fig.add_subplot()</code>, <code>fig.subplots()</code>, and <code>fig.add_axes()</code>) become manifest. Again, let’s demonstrate this using examples. Since <code>plt.subplot()</code>, <code>plt.subplots()</code>, and <code>plt.axes()</code> are essentially the same as <code>fig.add_subplot()</code>, <code>fig.subplots()</code>, and <code>fig.add_axes()</code>, I will only show examples for the later three functions.</p>
-<p>As stated above, we add one <code>axes</code> at a time when using <code>fig.add_subplot()</code>. The build-in order of <code>axes</code> is started from left to right and from top to bottom within the <code>axes</code> grid (Figure 1).
-<img src="Fig1.png" alt="Figure 1" /></p>
-<p>The same layout could be obtained using <code>fig.subplots()</code> with one line of code (Figure 2). It returns a <code>ndarray</code> object <code>axs</code> (I add a ‘s’ after <code>ax</code> to show that it contains multiple objects). Just like an 2D array object, each <code>ax</code> within <code>axs</code> can be accessed using <code>axs[x, y]</code> as well (i.e. <code>ax1</code> can be accessed using <code>axs[0, 0]</code>). Moreover, if you like to assign names to each <code>ax</code> within <code>axs</code>, you can use tuple unpacking like this, <code>((ax1, ax2), (ax3, ax4)) = fig.subplots(nrows=2, ncols=2)</code>. Flattening of 2D array is another method to access <code>ax</code> from <code>axs</code> as shown in Figure 2.
-<img src="Fig2.png" alt="Figure 2" /></p>
-<p>Normally, <code>fig.add_axes()</code> is used for arbitrary layout, such as a plot with inlet subplots or subplots overlap with each other. This is because we can fine-tune the position and size of each subplot by its dimensions (<code>[left, bottom, width, height]</code>). Having said that, we still can make a common layout as shown in Figure 1 and 2 using <code>fig.add_axes()</code> (Figure 3).
-<img src="Fig3.png" alt="Figure 3" /></p>
+<p>As stated above, we add one <code>axes</code> at a time when using <code>fig.add_subplot()</code>. The build-in order of <code>axes</code> is started from left to right and from top to bottom within the <code>axes</code> grid (Figure 1). <img src="Fig1.png" alt="Figure 1" /></p>
+<p>The same layout could be obtained using <code>fig.subplots()</code> with one line of code (Figure 2). It returns a <code>ndarray</code> object <code>axs</code> (I add a ‘s’ after <code>ax</code> to show that it contains multiple objects). Just like an 2D array object, each <code>ax</code> within <code>axs</code> can be accessed using <code>axs[x, y]</code> as well (i.e. <code>ax1</code> can be accessed using <code>axs[0, 0]</code>). Moreover, if you like to assign names to each <code>ax</code> within <code>axs</code>, you can use tuple unpacking like this, <code>((ax1, ax2), (ax3, ax4)) = fig.subplots(nrows=2, ncols=2)</code>. Flattening of 2D array is another method to access <code>ax</code> from <code>axs</code> as shown in Figure 2. <img src="Fig2.png" alt="Figure 2" /></p>
+<p>Normally, <code>fig.add_axes()</code> is used for arbitrary layout, such as a plot with inlet subplots or subplots overlap with each other. This is because we can fine-tune the position and size of each subplot by its dimensions (<code>[left, bottom, width, height]</code>). Having said that, we still can make a common layout as shown in Figure 1 and 2 using <code>fig.add_axes()</code> (Figure 3). <img src="Fig3.png" alt="Figure 3" /></p>
 <p>In summary, these six functions (concisely should be three functions, i.e. <code>fig.add_subplot()</code>, <code>fig.subplots()</code>, and <code>fig.add_axes()</code>) can be used interchangeably when you are making a <code>figure</code> with only one <code>axes</code>. However, they have respective strengths and can be used individually or in combination when it comes to making <code>figure</code> with multiple <code>axes</code> in different layouts.</p>
 <p>After reading this post, I hope you have a clearer understanding about how to call <code>axes</code> in <code>matplotlib</code>. All the codes in this post can be accessed from <a href="https://github.com/Perishleaf/data-visualisation-scripts/blob/master/matplotlib_init_fig_ax/matplotlib_init_fig_ax.ipynb">jupyter notebook</a>. If you know other functions/cases to call <code>axes</code> which are not listed here, please feel free to leave your comment. Let’s learn matplotlib together.</p>
 <hr />
