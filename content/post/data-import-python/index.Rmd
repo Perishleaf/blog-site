@@ -23,6 +23,7 @@ image:
   preview_only: false
 projects: []
 ---
+
 The prerequisite for doing any data-related operations in Python, such as data cleansing, data aggregation, data transformation, and data visualisation, is to load data into Python. Depends on the types of data files (e.g. `.csv`, `.txt`, `.tsv`, `.html`, `.json`, Excel spreadsheets, relational databases etc.) and their size, different methods should be applied to deal with this initial operation accordingly. In this post, I will list some common methods for importing data in Python.
 
 As usual, all required data and notebook can be accessed from [my Github](https://github.com/Perishleaf/data-visualisation-scripts/tree/master/data_import_python).
