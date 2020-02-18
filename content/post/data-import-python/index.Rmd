@@ -14,7 +14,7 @@ subtitle: "Understand which method should be used"
 summary: ''
 authors: 
 - admin
-lastmod: '2020-02-18T12:13:11+10:00'
+lastmod: '2020-02-18T10:13:11+10:00'
 featured: yes
 image:
   caption: ''
