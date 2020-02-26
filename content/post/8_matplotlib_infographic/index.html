@@ -1,0 +1,151 @@
+---
+title: Create An Infographic Using Matplotlib
+author: Jun Ye
+date: '2020-01-27'
+slug: create-an-infographic-using-matplotlib
+categories:
+  - Post
+tags:
+  - Data Visualisation
+  - Matplotlib
+  - Python
+  - infographic
+subtitle: "Temperature patterns of Australian cities in 2019"
+summary: ''
+authors: 
+- admin
+lastmod: '2020-01-27T12:13:11+10:00'
+featured: yes
+image:
+  caption: ''
+  focal_point: ''
+  placement: 2
+  preview_only: false
+projects: []
+---
+
+
+
+<p>From my previous posts about the <a href="https://towardsdatascience.com/plt-xxx-or-ax-xxx-that-is-the-question-in-matplotlib-8580acf42f44">hierarchical structure of <code>matplotlib</code> plotting</a> and <a href="https://towardsdatascience.com/the-many-ways-to-call-axes-in-matplotlib-2667a7b06e06">the many ways to instantiate <code>axes</code></a>, we can see that these features render <code>matplotlib</code> a great potential for creating highly complex and customisable visualisations. To demonstrate this and also improve my own understanding of <code>matplotlib</code>, I set out to make an <strong>infographic</strong> using <code>matplotlib</code> this week.</p>
+<p>An <a href="https://venngage.com/blog/what-is-an-infographic/">infographic</a> generally combines visual imagery, data charts, and minimal text together. It aims to illustrate an easy-to-understand overview of a topic. Owing to this nature, its layout and content are more complicated and diverse compared to a regular static data plot, which normally exhibits one type of data in one type of plot (<em>e.g. bar, scatter, line, and box plot or <a href="https://datavizproject.com/">their variants</a></em>). Furthermore, an infographic can be a stand-alone plot while a regular static data plot mainly serves as supplementary material and should be read within a certain context.</p>
+<p>As you might already see the finished infographic from the heading figure, which shows the yearly patterns of daily maximum temperature and precipitation across eight Australian major cities in 2019 (<em>I really hope you can get its topic before reading this paragraph. This makes me feel confident to proceed</em>). My infographic was inspired by this <a href="https://www.scmp.com/infographics/article/1243242/rain-patterns-hong-kong">infographic</a> from South China Morning Post.</p>
+<p>I personally really like to visualise large quantities of data in a grid-like structure. When the colours and shapes are set appropriately (<em>e.g. brick red for high temperature and arctic ice blue for low temperature in my case</em>), it starts to convey the patterns underlaid the intricacies (<em>e.g. less arctic ice blue as latitude decreasing</em>), while also delivers an artistic feeling (<em>e.g. the appearance of a bunch of red bars looks like burning wood</em>).</p>
+<p>Alright, without further ado, let’s now dive into the code and show you how I created this infographic using <code>matplotlib</code>. As usual, you can access all the required data and the jupyter notebook from <a href="https://github.com/Perishleaf/data-visualisation-scripts/tree/master/matplotlib_2019_temp">my Github</a>.</p>
+<hr />
+<div id="define-the-goal-and-collect-data" class="section level3">
+<h3>Define the goal and collect data</h3>
+<p>Although this is not within the scope of this post, I list this section to highlight that it is the fundamental part of making an effective infographic. Only if you know what story to tell, you have a direction for gathering data and thinking about design, layout, charts, and aesthetics. As for our case, weather data is downloaded from the <a href="http://www.bom.gov.au/">Australian Bureau of Meteorology website</a>. We only need daily maximum temperature, city name and date values (<em>i.e. <strong>max_tmp_day</strong>, <strong>City</strong>, and <strong>Date</strong> as shown in Figure 1</em>). <img src="Figure1.png" alt="Figure 1" /></p>
+</div>
+<div id="layout" class="section level3">
+<h3>Layout</h3>
+<p>As stated in my previous <a href="https://towardsdatascience.com/the-many-ways-to-call-axes-in-matplotlib-2667a7b06e06">post</a>, <code>fig.add_axes([left, bottom, width, height])</code> is a good way to manually place <code>axes</code> on <code>fig</code>. However, it is tedious to accurately calculate coordinates for each <code>axes</code> on the <code>fig</code> when we have lots of <code>axe</code>s (<em>we have 18 <code>axes</code> in total</em>) and alignment is required (<em>Our eyes are very picky, even slight misalignments will throw things off balance</em>). I hence adopted a mixture of <strong>common layout</strong> and <strong>arbitrary layout</strong> of <code>axes</code> on <code>fig</code>. using <code>fig.add_gridspec()</code> and <code>fig.add_axes()</code>. Here, <code>fig.add_gridspec()</code> is a function that enable us to specify the geometry of the grid that a <code>axes</code> will be placed. For example, imagine a 2 rows by 2 columns grid on a <code>fig</code>, normally if we use <code>fig.subplots(nrows=2, ncols=2)</code>, this will generate four <code>axes</code> that distributed evenly on the 2 by 2 grid. What if, on the 2 by 2 grid, we only need 3 <code>axes</code> that the first <code>axes</code> occupies the whole first row and the remaining 2 <code>axes</code> occupy the second row evenly? The power of <code>fig.add_gridspec()</code> comes in here, which enable us to create <code>axes</code> spanned rows and columns as desired. We can achieve the aforementioned layout as follow:</p>
+<pre class="python"><code>fig = plt.figure()
+# Use GridSpec for customising layout
+gs = fig.add_gridspec(nrows=2, ncols=2)
+# Add a empty axes that occupied the whole first row
+ax1 = fig.add_subplot(gs[0, 0:2])
+# Add two empty axes that occupied the remaining grid
+ax2 = fig.add_subplot(gs[1, 0])
+ax3 = fig.add_subplot(gs[1, 1])</code></pre>
+<p>As you can see, once a grid space object (<em>i.e. <code>gs</code></em>) is created, we can make use of its grid geometry, just like access values from a 2D <code>numpy.ndarray</code>, to place <code>axes</code> accordingly. For instance, <code>fig.add_subplot(gs[0, 0:2])</code> denotes add an <code>axes</code> occupied the whole first row in the 2 by 2 grid.</p>
+<pre class="python"><code># Set canvas background color the same as axes
+plt.rc(&#39;figure&#39;, facecolor=&#39;w&#39;)
+
+# Arrange city based on latitude
+cityList = [&#39;hobart&#39;, &#39;melbourne&#39;, &#39;canberra&#39;, &#39;adelaide&#39;, &#39;sydney&#39;, &#39;perth&#39;, &#39;brisbane&#39;, &#39;darwin&#39;]
+
+# set constrianed_layout as True to avoid axes overlap
+fig = plt.figure(figsize=(10,12), dpi=300, constrained_layout=True)
+
+# Use GridSpec for customising layout
+gs = fig.add_gridspec(nrows=10, ncols=10)
+
+# Set up a empty axes that occupied 2 rows and 10 cols in the grid for text
+axText = fig.add_subplot(gs[0:2, :])
+axText.annotate(&#39;I am ax1&#39;, (0.5, 0.5),
+                xycoords=&#39;axes fraction&#39;, va=&#39;center&#39;, ha=&#39;center&#39;)
+axText.get_xaxis().set_visible(False)
+axText.get_yaxis().set_visible(False)
+
+# Add a color bar on top of axText, using figure coordinates 
+axInlet = fig.add_axes([0.9, 0.97, 0.08, 0.01], frameon=True)
+axInlet.annotate(&#39;I am ax2&#39;, (0.5, 0.5),
+                 xycoords=&#39;axes fraction&#39;, va=&#39;center&#39;, ha=&#39;center&#39;)
+axInlet.get_xaxis().set_visible(False)
+axInlet.get_yaxis().set_visible(False)
+
+# Add axes for temperature bar plots that each occupy 1 row and 8 cols in the grid
+for i, city in enumerate(cityList):
+    ax = fig.add_subplot(gs[i+2, 0:8], ylim=(-30, 30))
+    ax.annotate(&#39;I am ax{}&#39;.format(i+3), (0.5, 0.5),
+                xycoords=&#39;axes fraction&#39;, va=&#39;center&#39;, ha=&#39;center&#39;)
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+
+# Add axes for rainfall that each occipy 1 row and 2 cols in the grid
+for i, city in enumerate(cityList):
+    axRain = fig.add_subplot(gs[i+2, 8:10], ylim=(-30, 30))
+    axRain.annotate(&#39;I am ax{}&#39;.format(i+11), (0.5, 0.5),
+                    xycoords=&#39;axes fraction&#39;, va=&#39;center&#39;, ha=&#39;center&#39;)
+    axRain.get_xaxis().set_visible(False)
+    axRain.get_yaxis().set_visible(False)
+
+plt.show()</code></pre>
+<p>Back to the infographic, as shown in the above code, except for <code>ax2</code> (<em>the <code>axes</code> for the colour bar</em>), all other <code>axe</code>s were added by <code>fig.add_gridspec(nrows=10, ncols=10)</code>. Specifically, on a 10 rows by 10 columns grid (Figure 2), <code>ax1</code>, which is the <code>axes</code> for the title, text and notes, occupies the first 2 rows and 8 columns. Each <code>axe</code>s from <code>ax3</code> to <code>ax10</code>, which are the <code>axes</code> for plotting temperature bar, occupies 1 row and 8 columns. Finally, each <code>axes</code> from <code>ax11</code> to <code>ax18</code>, which are <code>axes</code> for rainfall data, occupies only 1 row and 2 columns. <img src="Figure2.png" alt="Figure 2" /></p>
+<p>As you can see, <code>fig.add_gridspec()</code> is a powerful function when flexibility and alignment of multiple <code>axes</code> are both required.</p>
+</div>
+<div id="content-and-colour-scheme" class="section level3">
+<h3>Content and colour scheme</h3>
+<p>After the layout is confirmed, we can then add data plots. Here, take the temperature bar as an example (Figure 3). <img src="Figure3.png" alt="Figure 3" /> Considering both information and aesthetics, each bar represents the difference between daily maximum temperature and the yearly average temperature of these eight major cities (<em>24.43ºC</em>) in Celsius degree. By doing so, the audience can clearly identify days with above-average temperature (<em>bars upward</em>) and below-average temperature (<em>bars downward</em>). Otherwise, since temperature values are positive, all bars will toward the same direction above zero, which makes the bar plot boring. In addition, unlike a regular bar plot, I removed all grids, x-axis and y-axis and only left essential parts.</p>
+<p>Another additive is the text annotation with curved arrows to point out days with highest and lowest temperature individually. This add agility to the whole infographic in terms of aesthetics. This was delivered by <code>ax.annotate()</code>. The <a href="https://matplotlib.org/tutorials/text/annotations.html">official document</a> about <code>ax.annotate()</code> gives very detailed examples, so I will not repeat the introduction of this function in this post.</p>
+<p>Since the style of temperature bar plots need to be consistent for all these eight cities, we just need to come up codes for one plot and add others by a <code>for loop</code> (see code below).</p>
+<pre class="python"><code>for i, city in enumerate(cityList):
+    ax = fig.add_subplot(gs[i+2, 0:9], ylim=(-30, 30))
+    
+    df_tmp = df.loc[df[&#39;City&#39;] == city]
+    # color scheme
+    colors = cm.RdYlBu_r(df_tmp.max_tmp_day / max(df_tmp.max_tmp_day))
+    ax.bar(df_tmp.Date, df_tmp.max_tmp_day - mean_temp, label=&#39;_1&#39;, color=colors,
+           width=0.7, align=&quot;edge&quot;)
+    
+    # annotation for highest temp.
+    highDate = df_tmp.loc[df_tmp[&#39;max_tmp_day&#39;] == max(df_tmp.max_tmp_day)].Date
+    highTemp = max(df_tmp.max_tmp_day) - mean_temp
+    ax.annotate(&quot;Highest Temp.{}$^\circ$C\n{}&quot;.format(max(df_tmp.max_tmp_day), str(highDate)[-36:-26]),
+                xy=(highDate, highTemp), xycoords=&#39;data&#39;,
+                xytext=(highDate+timedelta(days=10), highTemp+5), textcoords=&#39;data&#39;,
+                size=6,
+                color=&#39;#e3e3e3&#39;,
+                arrowprops=dict(arrowstyle=&quot;-&gt;&quot;,
+                                connectionstyle=&quot;arc3, rad=.3&quot;,
+                                color=&#39;#e3e3e3&#39;)
+               )
+    # annotation for lowest temp.
+    lowDate = df_tmp.loc[df_tmp[&#39;max_tmp_day&#39;] == min(df_tmp.max_tmp_day)].Date
+    lowTemp = min(df_tmp.max_tmp_day) - mean_temp
+    ax.annotate(&quot;Lowest Temp.{}$^\circ$C\n{}&quot;.format(min(df_tmp.max_tmp_day), str(lowDate)[-36:-26]),
+                xy=(lowDate, lowTemp), xycoords=&#39;data&#39;,
+                xytext=(lowDate-timedelta(days=20), lowTemp-30), textcoords=&#39;data&#39;,
+                size=6,
+                color=&#39;#e3e3e3&#39;,
+                arrowprops=dict(arrowstyle=&quot;-&gt;&quot;,
+                                connectionstyle=&quot;arc3, rad=.3&quot;,
+                                color=&#39;#e3e3e3&#39;)
+               )
+    
+    # customise axes
+    ax.spines[&#39;bottom&#39;].set_color(None)  
+    ax.spines[&#39;right&#39;].set_color(None)  
+    ax.spines[&#39;left&#39;].set_color(None)  
+    ax.spines[&#39;top&#39;].set_color(None) 
+    ax.get_xaxis().set_ticks([])
+    ax.get_yaxis().set_ticks([])
+    ax.set_ylabel(city.title(), rotation=0, color=&#39;#e3e3e3&#39;, fontsize=10, fontweight=&#39;bold&#39;)</code></pre>
+<p>Although colour scheme is a very subjective decision, I can share the principles I followed here: creating contrast, grouping elements, and encoding quantity. In this infographic, I used a dark background to make the temperature bar plot and rainfall circles visually salient. The dark background also expressed a cheerless atmosphere to reflect the emergency of extreme weather. In addition, the use of consistent colours for bar plot and rainfall circles, respectively, helped to group information together. Finally, the application of a colour spectral (<em>from arctic ice blue to brick red</em>) for different temperature values highlighted the patterns.</p>
+</div>
+<div id="title-text-and-notes" class="section level3">
+<h3>Title, text and notes</h3>
+<p>The reason that an infographic can be a stand-alone plot is that necessary text helps to reinforce its topic. Here we can use <code>ax.text()</code> to put whatever text wherever we want on the <code>fig</code>. The only pitfall I found is that it is a bit troublesome to add a custom font family to <code>matplotlib</code> (<em><a href="https://scentellegher.github.io/visualization/2018/05/02/custom-fonts-matplotlib.html">one solution here</a></em>). An alternative is to add text via Illustrator once the main body of infographic is finished and export as <code>svg</code> file.</p>
+<hr />
+<p>As always, I welcome feedback, constructive criticism, and hearing about your data science projects. I can be reached on <a href="https://www.linkedin.com/in/jun-ye-29aaa769/">Linkedin</a>, and now on my <a href="https://junye0798.com/">website</a> as well.</p>
+</div>

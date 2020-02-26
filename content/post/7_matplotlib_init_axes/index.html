@@ -1,0 +1,96 @@
+---
+title: The Many Ways To Call Axes In Matplotlib
+author: Jun Ye
+date: '2020-01-17'
+slug: the-many-ways-to-call-axes-in-matplotlib
+categories:
+  - Post
+tags:
+  - Data Visualisation
+  - Matplotlib
+  - Python
+subtitle: "A beginner's notes in learning matplotlib"
+summary: ''
+authors: 
+- admin
+lastmod: '2020-01-17T12:13:11+10:00'
+featured: yes
+image:
+  caption: ''
+  focal_point: ''
+  placement: 3
+  preview_only: false
+projects: []
+---
+
+
+
+<p>Although <code>matplotlib</code> is extremely powerful and the only limitation might be our imagination, it is a bit challenging for new users to find the right path as there are always more than one way to achieve the same goal in <code>matplotlib</code>. Calling <code>axes</code> is one of them.</p>
+<p>Let’s say you just decide to make plots using <strong>object-oriented interface</strong> (<a href="https://towardsdatascience.com/plt-xxx-or-ax-xxx-that-is-the-question-in-matplotlib-8580acf42f44"><em>aka artist layer plotting</em></a>) in <code>matplotlib</code>. However, I bet you will be soon running into problems when trying to instantiate <code>axes</code> to start your plotting. You may find that <code>plt.subplots()</code> and <code>plt.subplot()</code> both can return you <code>axes</code>. Yes, they only differ by one letter ‘s’. Later, you notice that <code>plt.axes()</code> can call <code>axes</code> as well. It is not over yet, you highly likely will encounter the following functions <code>fig.add_subplot()</code>, <code>fig.add_axes()</code>, and <code>fig.subplots()</code>, which are all able to create <code>axes</code> for you. I totally understand how panic you are or will be as I have had the same confusion in learning <code>matplotlib</code>.</p>
+<p>In this post, I will summarise the differences of these functions (i.e. <code>plt.subplot()</code>, <code>plt.subplots()</code>, <code>plt.axes()</code>, <code>fig.add_subplot()</code>, <code>fig.subplots()</code>, and <code>fig.add_axes()</code>) and demonstrate how to use them accordingly.</p>
+<hr />
+<p>In <code>matplotlib</code> terminology, a basic plot starts from one <code>figure</code> and at least one <code>axes</code> (if you are confused about these terms, you may find <a href="https://towardsdatascience.com/plt-xxx-or-ax-xxx-that-is-the-question-in-matplotlib-8580acf42f44">this post</a> is useful). A close analogy with painting, <code>figure</code> is the canvas and <code>axes</code> is the artistic composition. A canvas (<code>figure</code>) can have only one type or many different types of artistic composition (<code>axes</code>) on it. In light of this, let’s first start from a simple case for <code>figure</code> with only one <code>axes</code>, then dive into <code>figure</code> with multiple <code>axes</code>.</p>
+<div id="figure-with-only-one-axes" class="section level3">
+<h3><code>figure</code> with only one <code>axes</code></h3>
+<p>In most circumstances, we instantiate a <code>fig</code> object by calling <code>fig = plt.figure(…)</code> and then add an <code>axes</code> object to the <code>fig</code> by calling <code>ax = fig.add_subplot()</code>. By default, if leave the parentheses empty, this function is passed with <code>fig.add_subplot(1, 1, 1)</code>, which means add # 1 <code>axes</code> in a 1 row by 1 column <code>axes</code> grid. We can also use an alternative format with 3-digit integer without comma (i.e. <code>fig.add_subplot(111)</code>). However, with the 3-digit integer format, each integer cannot be greater than 9. Using this function, we add only one <code>axes</code> at a time.</p>
+<pre class="python"><code># Create a figure
+fig = plt.figure()
+# Add a subplot
+ax = fig.add_subplot()
+
+# Equivalent method
+ax = fig.add_subplot(111)
+# Another equivalent but more general method
+ax = fig.add_subplot(1, 1, 1)</code></pre>
+<p>Sometimes, we are able to add an <code>axes</code> object using <code>ax = fig.subplots()</code>. This function is originally devised to make it convenient to create a set of subplots in common layouts by a single call. It takes <code>nrows</code> and <code>ncols</code> as positional arguments (i.e. this function is supposed to add multiple <code>axes</code> at a time). However, if we leave the parentheses empty, this function is passed with <code>fig.subplots(1, 1)</code> by default, which means create an <code>axes</code> grid with 1 row by 1 column (i.e. one <code>axes</code> on <code>fig</code>). Hence the axes only contain one item in it (i.e. <code>len(ax)</code> is 1).</p>
+<pre class="python"><code># Create a figure
+fig = plt.figure()
+
+# Create a subplot
+ax = fig.subplots()
+# Equivalent method
+ax = fig.subplots(1, 1)</code></pre>
+<p>Rarely, as for <code>figure</code> with one plot, we may also use <code>ax = fig.add_axes([left, bottom, width, height])</code> to add an <code>axes</code> onto a <code>fig</code>. This function enables <strong>arbitrary layouts</strong> of <code>axes</code> on <code>fig</code> by taking the dimensions (<code>[left, bottom, width, height]</code>) of the new <code>axes</code> (you can find an example <a href="https://towardsdatascience.com/plt-xxx-or-ax-xxx-that-is-the-question-in-matplotlib-8580acf42f44">here</a>). All four numbers should be in fractions of <code>figure</code> width and height. In other words, we control the position and size of the <code>axes</code>. <code>fig.add_axes([0, 0, 0.78, 0.78])</code> creates the same size plot as by <code>fig.add_subplot(111)</code> and <code>fig.subplots(1, 1)</code>. As you can see here, <code>axes</code> is not in the same size as <code>figure</code>. There is white space between <code>axes</code> and <code>figure</code> by default.</p>
+<pre class="python"><code># Create a figure
+fig = plt.figure()
+# Add a subplot 
+ax = fig.add_axes([0, 0, 0.78, 0.78])</code></pre>
+<p>After demonstrating the differences of the above three functions, it is fairly easy to understand <code>plt.subplot()</code>, <code>plt.subplots()</code>, and <code>plt.axes()</code>. They are from <strong>state-based interface</strong> (aka scripting layer plotting) of <code>matplotlib</code>, which just wrapped <code>fig = plt.figure()</code> with <code>fig.add_subplot()</code>, <code>fig.subplots()</code>, and <code>fig.add_axes()</code>, correspondingly.</p>
+<p><code>plt.subplot()</code> returns only one <code>axes</code> and create a <code>figure</code> object automatically. You can change <code>figure</code>-level attributes or save the <code>figure</code> by calling <code>ax.figure.xxx()</code> instead. For example, <code>ax.figure.savefig('example.png')</code> will save the figure as <code>example.png</code>.</p>
+<pre class="python"><code># Creates just a figure and only one subplot
+ax = plt.subplot()
+# Equivalent method
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)</code></pre>
+<p><code>plt.subplots()</code> returns a tuple containing a <code>figure</code> and <code>axes</code> object(s). We need to unpack this tuple and assign its items to variables <code>fig</code> and <code>ax</code>, respectively.</p>
+<pre class="python"><code># Creates just a figure and only one subplot
+fig, ax = plt.subplots()
+# Equivalent method
+fig = plt.figure()
+ax = fig.subplots(1, 1)</code></pre>
+<p><code>plt.axes()</code> returns one <code>axes</code> using <code>fig.add_subplot(1, 1, 1)</code> when no argument is provided and, just like <code>plt.subplot()</code>, it creates a <code>figure</code> object automatically. <code>plt.axes()</code> also accept dimensions (<code>[left, bottom, width, height]</code>) using <code>fig.add_axes([left, bottom, width, height])</code> in its backend. The following two sets of code create the same plots.</p>
+<pre class="python"><code># Set one
+# Creates just a figure and only one subplot
+ax = plt.axes()
+# Equivalent method
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+-------------------------------------------
+# Set two
+# Creates just a figure and only one subplot
+ax = plt.axes([0, 0, 0.78, 0.78])
+# Equivalent method
+fig = plt.figure()
+ax = fig.add_axes([0, 0, 0.78, 0.78])</code></pre>
+</div>
+<div id="figure-with-multiple-axes" class="section level3">
+<h3><code>figure</code> with multiple <code>axes</code></h3>
+<p>When it comes to plotting multiple <code>axes</code> on <code>figure</code>, the differences among these functions (i.e. <code>plt.subplot()</code>, <code>plt.subplots()</code>, <code>plt.axes()</code>, <code>fig.add_subplot()</code>, <code>fig.subplots()</code>, and <code>fig.add_axes()</code>) become manifest. Again, let’s demonstrate this using examples. Since <code>plt.subplot()</code>, <code>plt.subplots()</code>, and <code>plt.axes()</code> are essentially the same as <code>fig.add_subplot()</code>, <code>fig.subplots()</code>, and <code>fig.add_axes()</code>, I will only show examples for the later three functions.</p>
+<p>As stated above, we add one <code>axes</code> at a time when using <code>fig.add_subplot()</code>. The build-in order of <code>axes</code> is started from left to right and from top to bottom within the <code>axes</code> grid (Figure 1). <img src="Fig1.png" alt="Figure 1" /></p>
+<p>The same layout could be obtained using <code>fig.subplots()</code> with one line of code (Figure 2). It returns a <code>ndarray</code> object <code>axs</code> (I add a ‘s’ after <code>ax</code> to show that it contains multiple objects). Just like an 2D array object, each <code>ax</code> within <code>axs</code> can be accessed using <code>axs[x, y]</code> as well (i.e. <code>ax1</code> can be accessed using <code>axs[0, 0]</code>). Moreover, if you like to assign names to each <code>ax</code> within <code>axs</code>, you can use tuple unpacking like this, <code>((ax1, ax2), (ax3, ax4)) = fig.subplots(nrows=2, ncols=2)</code>. Flattening of 2D array is another method to access <code>ax</code> from <code>axs</code> as shown in Figure 2. <img src="Fig2.png" alt="Figure 2" /></p>
+<p>Normally, <code>fig.add_axes()</code> is used for arbitrary layout, such as a plot with inlet subplots or subplots overlap with each other. This is because we can fine-tune the position and size of each subplot by its dimensions (<code>[left, bottom, width, height]</code>). Having said that, we still can make a common layout as shown in Figure 1 and 2 using <code>fig.add_axes()</code> (Figure 3). <img src="Fig3.png" alt="Figure 3" /></p>
+<p>In summary, these six functions (concisely should be three functions, i.e. <code>fig.add_subplot()</code>, <code>fig.subplots()</code>, and <code>fig.add_axes()</code>) can be used interchangeably when you are making a <code>figure</code> with only one <code>axes</code>. However, they have respective strengths and can be used individually or in combination when it comes to making <code>figure</code> with multiple <code>axes</code> in different layouts.</p>
+<p>After reading this post, I hope you have a clearer understanding about how to call <code>axes</code> in <code>matplotlib</code>. All the codes in this post can be accessed from <a href="https://github.com/Perishleaf/data-visualisation-scripts/blob/master/matplotlib_init_fig_ax/matplotlib_init_fig_ax.ipynb">jupyter notebook</a>. If you know other functions/cases to call <code>axes</code> which are not listed here, please feel free to leave your comment. Let’s learn matplotlib together.</p>
+<hr />
+<p>As always, I welcome feedback, constructive criticism, and hearing about your data science projects. I can be reached on <a href="https://www.linkedin.com/in/jun-ye-29aaa769/">Linkedin</a>, and now on my <a href="https://junye0798.com/">website</a> as well.</p>
+</div>

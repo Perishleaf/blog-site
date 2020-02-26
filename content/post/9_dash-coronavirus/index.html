@@ -1,0 +1,153 @@
+---
+title: Build A Dashboard To Track The Spread of Coronavirus Using Dash
+author: Jun Ye
+date: '2020-02-02'
+slug: build-a-dashboard-to-track-the-spread-of-coronavirus-using-dash
+categories:
+  - Post
+tags:
+  - Data Visualisation
+  - Plotly
+  - Python
+  - Dashboard
+subtitle: "Real-time view of globally confirmed, recovered and deaths coronavirus (2019-nCoV) patients"
+summary: ''
+authors: 
+- admin
+lastmod: '2020-02-02T12:13:11+10:00'
+featured: yes
+image:
+  caption: ''
+  focal_point: ''
+  placement: 2
+  preview_only: false
+projects: []
+---
+
+
+
+<p>Last month, I published four posts to share with you my experience in using <code>matplotlib</code>. Benefit from its full control of elements on a given <a href="https://towardsdatascience.com/create-an-infographic-using-matplotlib-3fbb546c1628">graph</a>, <code>matplotlib</code> is deemed as a fundamental python library for data visualisation and used by many other libraries (e.g. <code>seaborn</code> and <code>pandas</code>) as plotting module. This is also why I think learning <code>matplotlib</code> is an essential part for being a practitioner in data science, which helps to build up in-depth understanding about logic behind data visualisation tools.</p>
+<p>Nevertheless, great flexibility comes with <a href="https://towardsdatascience.com/plt-xxx-or-ax-xxx-that-is-the-question-in-matplotlib-8580acf42f44">convoluted layers</a> and <a href="https://towardsdatascience.com/the-many-ways-to-call-axes-in-matplotlib-2667a7b06e06">complex syntax</a>. It can often be daunting with tedious coding to make a publishable plot using <code>matplotlib</code>. In other words, <code>matplotlib</code> should not be our only data visualisation tool, we need always be equipped with alternatives in our toolbox to handle evolving requirements.</p>
+<p>When it comes with requirements for efficiency, interaction, and web-based visualisation, <a href="https://plot.ly/graphing-libraries/"><code>plotly</code></a> and <a href="https://dash.plot.ly/introduction"><code>dash</code></a> are must-learn tools. The beauty about these tools is that we do not need to master JavaScript for making interactive web visualisation as both tools handle that for us. They connect us with JavaScript (e.g. React.js, Plotly.js, and d3.js) to make graphs responsive and also beautiful. What we need to provide is just simple codes in pure python environment.</p>
+<p>In this post, I will dissect the codes of a dashboard, which I built to track the spread of recent outbreak coronavirus (2019-nCoV). <a href="https://dash-coronavirus-2020.herokuapp.com/">From this dashboard</a>, you can have a real-time overview of the numbers of global coronavirus cases, including confirmed, recovered and deaths cases, and their distribution on a world map.</p>
+<p>As usual, you can access all required data and the jupyter notebook from <a href="https://github.com/Perishleaf/data-visualisation-scripts/tree/master/dash-2019-coronavirus">my Github</a>. Since it is still under active development, the version used in this post may differ from what you downloaded. In addition, please feel free to provide your suggestions or help to make this dashboard more useful and accurate.</p>
+<hr />
+<blockquote>
+<p>A dashboard is a visual display of the most important information needed to achieve one or more objectives; consolidated and arranged on a single screen so the information can be monitored at a glance</p>
+<p>-Stephen Few</p>
+</blockquote>
+<div id="framework" class="section level3">
+<h3>Framework</h3>
+<p>To help you understand the codes (you can find the codes from app.py) quickly, let me first declare the logic behind them. Generally, the framework (i.e. my thinking process) in building this dashboard application via <code>dash</code> followed: <strong>Data preparation</strong> -&gt; <strong>Dashboard layout determination</strong> -&gt; <strong>Content generation and insertion</strong>, despite that you may find the third part happened before the second part in the code. That is the way Python read the codes, not us. Bear this framework in mind and let’s dive into these codes.</p>
+</div>
+<div id="data-collection-and-cleansing" class="section level3">
+<h3>Data collection and cleansing</h3>
+<p>Many sources provide real-time data for tracking the spread of coronavirus (e.g. search “coronavirus” on github, there are 231 repositories, Figure 1). As for my dashboard, I complied data from two sources (i.e. <a href="https://docs.google.com/spreadsheets/d/1yZv9w9zRKwrGTaR-YzmAqMefw4wMlaXocejdxZaTs6w/htmlview?usp=sharing&amp;sle=true#">Johns Hopkins CSSE</a> and <a href="https://ncov.dxy.cn/ncovh5/view/pneumonia?scene=2&amp;clicktime=1579582238&amp;enterid=1579582238&amp;from=singlemessage&amp;isappinstalled=0">DingXiangYuan</a>), where they maintained timely and accurate case numbers for this public emergency. Since the codes of this part are pretty straightforward, I only give brief explanations about the key points here. <img src="Figure1.png" alt="Figure 1" /></p>
+<p>First, at this stage, I manually downloaded and checked data from these two sources and stored them in Excel data sheets on a daily basis. As the emergency is going on, the number of sheets in the Excel file is increasing as well. I used <code>pandas.ExcelFile()</code> function (you need install <code>xlrd</code> library to use this function) to import sheets as separated dataframes and store them in a dictionary object (i.e. <code>dfs</code>). I therefore can access data from any given date by using key (i.e. <code>keyList</code>) of the dictionary.</p>
+<pre class="python"><code># Import xlsx file and store each sheet in to a df list
+xl_file = pd.ExcelFile(&#39;./data.xlsx&#39;,)
+
+dfs = {sheet_name: xl_file.parse(sheet_name) 
+          for sheet_name in xl_file.sheet_names}
+
+# Data from each sheet can be accessed via key
+keyList = list(dfs.keys())
+
+# Data cleansing
+for key, df in dfs.items():
+    dfs[key].loc[:,&#39;Confirmed&#39;].fillna(value=0, inplace=True)
+    dfs[key].loc[:,&#39;Deaths&#39;].fillna(value=0, inplace=True)
+    dfs[key].loc[:,&#39;Recovered&#39;].fillna(value=0, inplace=True)
+    dfs[key]=dfs[key].astype({&#39;Confirmed&#39;:&#39;int64&#39;, &#39;Deaths&#39;:&#39;int64&#39;, &#39;Recovered&#39;:&#39;int64&#39;})
+    # Change as China for coordinate search
+    dfs[key]=dfs[key].replace({&#39;Country/Region&#39;:&#39;Mainland China&#39;}, &#39;China&#39;)
+    dfs[key]=dfs[key].replace({&#39;Province/State&#39;:&#39;Queensland&#39;}, &#39;Brisbane&#39;)
+    dfs[key]=dfs[key].replace({&#39;Province/State&#39;:&#39;New South Wales&#39;}, &#39;Sydney&#39;)
+    dfs[key]=dfs[key].replace({&#39;Province/State&#39;:&#39;Victoria&#39;}, &#39;Melbourne&#39;)
+    dfs[key]=dfs[key].replace({&#39;Province/State&#39;:&#39;South Australia&#39;}, &#39;Adelaide&#39;)
+    # Add a zero to the date so can be convert by datetime.strptime as 0-padded date
+    dfs[key][&#39;Last Update&#39;] = &#39;0&#39; + dfs[key][&#39;Last Update&#39;]
+    dfs[key][&#39;Date_last_updated&#39;] = [datetime.strptime(d, &#39;%m/%d/%Y %H:%M&#39;) for d in dfs[key][&#39;Last Update&#39;]]</code></pre>
+<p>Second, as we are going to make a scatter map to show the distribution of coronavirus cases on a global map, every location should be assigned with coordinates. Here I used service provided by <a href="https://opencagedata.com/">OpenCageGeocode</a> to call coordinates. As the usage limits (i.e. 2500 API requests per day), it is not feasible to call coordinates for every locations in every sheets repeatedly. We just need to call coordinates for data from the latest date (i.e. <code>dfs[keyList[0]]</code>) and plot the latest data on the map.</p>
+<pre class="python"><code># Add coordinates for each area in the list for the latest table sheet
+# As there are limit for free account, we only call coordinates for the latest table sheet
+from opencage.geocoder import OpenCageGeocode
+key = &#39;Your key number&#39;  # get api key from:  https://opencagedata.com
+geocoder = OpenCageGeocode(key)
+
+list_lat = []   # create empty lists
+list_long = []    
+for index, row in dfs[keyList[0]].iterrows(): # iterate over rows in dataframe
+    City = row[&#39;Province/State&#39;]
+    State = row[&#39;Country/Region&#39;]
+
+    if City:
+        if City == &#39;Macau&#39; or City == &#39;Hong Kong&#39;:
+            query = str(City)+&#39;,&#39;+&#39;China&#39;
+            results = geocoder.geocode(query)   
+            lat = results[0][&#39;geometry&#39;][&#39;lat&#39;]
+            long = results[0][&#39;geometry&#39;][&#39;lng&#39;]
+
+            list_lat.append(lat)
+            list_long.append(long)
+        else:
+            query = str(City)+&#39;,&#39;+str(State)
+            results = geocoder.geocode(query)   
+            lat = results[0][&#39;geometry&#39;][&#39;lat&#39;]
+            long = results[0][&#39;geometry&#39;][&#39;lng&#39;]
+
+            list_lat.append(lat)
+            list_long.append(long)
+
+    else:
+        query = str(State)
+        results = geocoder.geocode(query)   
+        lat = results[0][&#39;geometry&#39;][&#39;lat&#39;]
+        long = results[0][&#39;geometry&#39;][&#39;lng&#39;]
+
+        list_lat.append(lat)
+        list_long.append(long)
+# create new columns from lists    
+dfs[keyList[0]][&#39;lat&#39;] = list_lat   
+dfs[keyList[0]][&#39;lon&#39;] = list_long
+
+dfs[keyList[0]].to_csv(&quot;{}_data.csv&quot;.format(keyList[0]), index=False)</code></pre>
+</div>
+<div id="dashboard-components-and-layout" class="section level3">
+<h3>Dashboard components and layout</h3>
+<p>Since it is a web-based application, it is inevitable to deal with HTML structures for the layout. Don’t panic, instead of writing HTML ourselves, <code>dash</code> provides us the <code>dash-html-components</code> library to deal with it. We basically just need to compose the layout using Python structures. Note that the layout can be very complex by combining with a <code>css</code> file, however, we will stick with basic layout in this dashboard.</p>
+<p>First, we need to understand <code>html.Div()</code>. You can consider it as a <strong>container/section</strong> for your content. As shown in Figure 2, there are four containers (actually should be five, including the footnote) in the dashboard. Specifically, in the title container, it has a title (i.e. <code>html.H4()</code>) and two paragraphs (i.e. <code>html.P()</code>). As for the Number Plates container, it has four sub containers (i.e. <code>html.Div()</code>), each sub container is comprised of one paragraph (i.e. <code>html.P()</code>) and one title (i.e. <code>html.H3()</code>). Simple, right? I believe you can now figure out the remaining containers in the code. <img src="Figure2.png" alt="Figure 2" /></p>
+<p>There are three arguments inside <code>html.Div(id, style={}, children=[])</code>, where <code>id</code> is optional if you do not want to use <code>css</code> file (A <code>css</code> file is a cascading style sheet file used to format the contents of a webpage) to style the children content. In a simple word, normally, within your application folder (i.e. <code>dash-2019-coronavirus</code> folder in our case), there will be a <code>assets</code> folder, in which it contains the <code>css</code> file to specify the format of the application. You specify a style (e.g. margin, font, and color etc.) and <code>id</code> within the <code>css</code> file, if you want to use this style in the application layout, instead of adding <code>style={}</code> within <code>html.Div()</code> repeatedly every time when you want to use the same style, you just need to assign the same <code>id</code> within the <code>html.Div()</code>. So dash knows how to style its children content within this <code>html.Div()</code> container using corresponding style in the <code>css</code> file within the <code>assets</code> folder.</p>
+<p>For example, as you can see from Figure 3, I specified an <code>id=”number-plate”</code> in the <code>html.Div()</code> container (line 409, right panel), and correspondingly, in line 736, 740, and 764 of the <code>css</code> file (left panel), I set up different font sizes for content associated with this <code>id</code> when displayed in different screen size (e.g. desktop or ipad). Hence, when user open the application from a small screen, dash knows to use 1.5rem for font in the <code>html.P()</code> element and 3rem for font in the <code>html.H3()</code> (‘rem’ is the unit set up relative to the root em, to not put you to sleep, let’s skip this in this post for now). Except for this one, I styled the components mostly in the python codes as you can find <code>style={}</code> in every container. <img src="Figure3.png" alt="Figure 3" /></p>
+<p>Last thing we need to know is that, <strong>in each <code>html.Div()</code> container, its children elements fill up empty space in that container following the order from left to right and from top to bottom</strong>. For example, in the Number Plates container (Figure 2), the widths of current four number plates are set up as 24.4% the full width of the screen (i.e. <code>style={‘width’:‘24.4%’}</code>, Figure 3, left panel, line 413, 420, 427 and 434), respectively. They thus filled up all empty space in one row from left to right first. Let’s say now you have a fifth number plate with the same width, it will automatically placed at the beginning of a second row in the same container.</p>
+<blockquote>
+<p>To be a functional house, once we finish its construction, the next thing is to move furnitures into the house.</p>
+</blockquote>
+</div>
+<div id="content-generation-and-insertion" class="section level3">
+<h3>Content generation and insertion</h3>
+<p>As you can see from Figure 4, we constructed sub-containers for graph components (i.e. three scatter-line plots and map). Each sub-container has an children component named as <code>dcc.Graph()</code>. This function comes from <code>dash_core_components</code> library that can be used to render any plotly-powered data visualisation, passed as the <code>figure</code> argument. In other words, we make nice graph using <code>plotly</code> and pass it to <code>dcc.Graph()</code> and <code>dash</code> knows how to deal with the graph , that’s it. <img src="Figure4.png" alt="Figure 4" /></p>
+<p>If you are familiar with the syntax logic behind <code>matplotlib</code>, you will find the syntax of <code>plotly</code> graph object is easy to understand as well (Figure 5). They basically follow the same logic. We first instantiate a empty canvas by calling <code>fig = go.Figure()</code>. Then add trace (similar to the concept of <code>axes</code> in <code>matplotlib</code>). In <code>plotly</code>, we have access to customise almost all elements in the graph via <code>figure.update_layout()</code>. <img src="Figure5.png" alt="Figure 5" /></p>
+</div>
+<div id="running-application-and-deployment-in-heroku" class="section level3">
+<h3>Running application and Deployment in heroku</h3>
+<p>To run the application locally, just type <code>python app.py</code> within the folder that contains all other required files (i.e. assets/, data.xlsx, etc.). Copy and paste the http site to your preferred browser, you will see the application if everything is going right.</p>
+<pre class="bash"><code>Running on http://127.0.0.1:8050/
+Debugger PIN: 707-347-654
+ * Serving Flask app &quot;app&quot; (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on</code></pre>
+<p>Instead, if you want to share your application publicly, we need to deploy it on a server. I personally found heroku is a very user-friendly option and provides <a href="https://devcenter.heroku.com/articles/getting-started-with-python">step-by-step tutorial</a> and dash also provide <a href="https://dash.plot.ly/deployment">tutorial</a> for deployment in heroku. One thing note that I used <code>conda create</code> to create a virtual environment for my application instead of using <code>virtualenv</code> as indicated in <code>dash</code> tutorial.</p>
+<p>And, here are some links and posts I found useful while learning how to build this Dash app:</p>
+<ul>
+<li><a href="https://plot.ly/dash/">Dash website</a></li>
+<li><a href="https://devcenter.heroku.com/articles/getting-started-with-python#deploy-the-app">Heroku tutorial</a></li>
+<li><a href="https://radumas.info/blog/tutorial/2017/08/10/codeday.html">Dash Plotly Map</a></li>
+<li><a href="https://timothyrenner.github.io/datascience/2017/08/08/finding-bigfoot-with-dash-part-1.html">Finding Bigfoot with Dash</a></li>
+<li><a href="https://medium.com/a-r-g-o/using-plotlys-dash-to-deliver-public-sector-decision-support-dashboards-ac863fa829fb">Using Plotly’s Dash to deliver public sector decision support dashboards</a></li>
+</ul>
+<hr />
+<p>As always, I welcome feedback, constructive criticism, and hearing about your data science projects. I can be reached on <a href="https://www.linkedin.com/in/jun-ye-29aaa769/">Linkedin</a>, and now on my <a href="https://junye0798.com/">website</a> as well.</p>
+</div>

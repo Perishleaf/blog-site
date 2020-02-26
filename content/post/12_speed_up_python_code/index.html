@@ -1,0 +1,117 @@
+---
+title: Ten Tricks To Speed Up Your Python Codes
+author: Jun Ye
+date: '2020-02-26'
+slug: ten-tricks-to-spedd-up-your-python-codes 
+categories:
+  - Post
+tags:
+  - Data analysis
+  - Programming
+  - Python
+  - Pandas
+subtitle: "Tiny improvement at each step, great leap as a whole"
+summary: ''
+authors: 
+- admin
+lastmod: '2020-02-26T10:13:11+10:00'
+featured: yes
+image:
+  caption: ''
+  focal_point: ''
+  placement: 2
+  preview_only: false
+projects: []
+---
+
+
+
+<p>Python is slow.</p>
+<p>I bet you might encounter this counterargument many times about using Python, especially from people who come from <code>C</code> or <code>C++</code> or <code>Java</code> world. This is true in many cases, for instance, looping over or sorting Python arrays, lists, or dictionaries can be sometimes slow. After all, Python is developed to make programming fun and easy. Thus, the improvements of Python code in succinctness and readability have to come with a cost of performance.</p>
+<p>Having said that, many efforts have been done in recent years to improve Python’s performance. We now can process large datasets in an efficient way by using numpy, scipy, pandas, and <a href="http://numba.pydata.org/">numba</a>, as all these libraries implemented their critical code paths in <code>C</code>/<code>C++</code>. There is another exciting project, the <a href="https://www.pypy.org/">Pypy project</a>, which speed up Python code by 4.4 times compared to <a href="https://stackoverflow.com/questions/17130975/python-vs-cpython/17130986">Cpython</a> (original Python implementation).</p>
+<p>Other than these external resources, <strong>what can we do to speed up Python code in our daily coding practice?</strong> Today, I will share with you 10 tricks that I used a lot during my Python learning process.</p>
+<p>As usual, if you want to rerun codes in this post yourself, all required data and notebook can be accessed from my <a href="https://github.com/Perishleaf/data-visualisation-scripts/tree/master/speed_up_python_code">Github</a>.</p>
+<div id="familiar-with-built-in-functions" class="section level4">
+<h4>1. Familiar with built-in functions</h4>
+<p>Python comes with many built-in functions implemented in <code>C</code>, which are very fast and well maintained (Figure 1). We should at least familiar with these function names and know where to find it (some commonly used computation-related functions are <code>abs()</code>, <code>len()</code>, <code>max()</code>, <code>min()</code>, <code>set()</code>, <code>sum()</code>). Therefore, whenever we need to carry out a simple computation, we can take the right shortcut instead of writing our own version in a clumsy way. <img src="Figure1.png" alt="Figure 1" /></p>
+<p>Let’s use the built-in functions <code>set()</code> and <code>sum()</code> as examples. As you can see in Figure 2, it is 36.1 and 20.9 times faster using <code>set()</code> and <code>sum()</code> than the functions written by ourselves, respectively. <img src="Figure2.png" alt="Figure 2" /></p>
+</div>
+<div id="sort-vs.-sorted" class="section level4">
+<h4>2. <code>sort()</code> vs. <code>sorted()</code></h4>
+<p>Both functions can sort list.</p>
+<p>If we just want to obtain a sorted list and do not care about the original list, <strong><code>sort()</code> is a bit faster than <code>sorted()</code> both for basic sorting and when using key parameters</strong> (the <code>key</code> parameter specifies a function to be called on each list element prior to making comparisons), as shown in Figure 3.</p>
+<p>This is because the <code>sort()</code> method modifies the list in-place while <code>sorted(</code>) builds a new sorted list and keep original list intact. Note that even though we assigned <code>a_long_list.sort()</code> to a new variable (<code>a_long_list_sorted</code>), the order of values inside <code>a_long_list</code> itself actually already changed. <img src="Figure3.png" alt="Figure 3" /></p>
+<p>However, <code>sorted()</code> is more versatile compared to <code>sort()</code>. This is because <code>sorted()</code> accepts any iterable while <code>sort()</code> is only defined for lists. Therefore, if we want to sort something other than a list, <code>sorted()</code> is the right function to use. For example, we can quickly sort a dictionary either by its keys or values (Figure 4). <img src="Figure4.png" alt="Figure 4" /></p>
+</div>
+<div id="use-symbols-instead-of-their-names" class="section level4">
+<h4>3. Use symbols instead of their names</h4>
+<p>As shown in Figure 5, when we need an empty dictionary or list object, instead of using <code>dict()</code> or <code>list()</code>, we can directly call <code>{}</code> (as for an empty set, we need to use <code>set()</code> itself) and <code>[]</code>. This trick may not necessarily speed-up the codes, but do make the codes more <a href="https://stackoverflow.com/questions/25011078/what-does-pythonic-mean">pythonic</a>. <img src="Figure5.png" alt="Figure 5" /></p>
+</div>
+<div id="list-comprehension" class="section level4">
+<h4>4. List comprehension</h4>
+<p>Normally when we need to create a new list from an old list based on certain rules, we use a <code>for</code> loop to iterate through the old list and transform its values based on the rule and save in a new list. For example, let’s say we want to find all even numbers from <code>another_long_list</code>, we can use the following codes:</p>
+<pre class="python"><code>even_num = []
+for number in another_long_list:
+    if number % 2 == 0:
+        even_num.append(number)</code></pre>
+<p>However, there is a more concise and elegant way to achieve this. As shown in Figure 6, <strong>we put the original for loop in just a single line of code.</strong> Moreover, the speed improved by almost 2 times. <img src="Figure6.png" alt="Figure 6" /></p>
+<p>Combined with <strong>rule 3</strong>, we can turn list into dictionaries or sets as well, just change <code>[]</code> as <code>{}</code>. Let’s rewrite codes in Figure 5, we can omit the step of assignment and complete the iteration inside the symbol, like this</p>
+<pre class="python"><code>sorted_dict3 = {key: value for key, value in sorted(a_dict.items(), key=lambda item: item[1])}.</code></pre>
+<p>To break this down, start at the end. The function “<code>sorted(a_dict.items(), key=lambda item: item[1])</code>” returned us a list of tuples (Figure 4). Here, we used multiple assignment to unpack the tuple, as for each tuple inside the list, we assigned <code>key</code> to its first item and <code>value</code> to its second item (as we know there are two items inside each tuple in this case). Finally, each pair of <code>key</code> and <code>value</code> was kept inside a dictionary.</p>
+</div>
+<div id="use-enumerate-for-value-and-index" class="section level4">
+<h4>5. Use <code>enumerate()</code> for value and index</h4>
+<p>Sometimes, when we iterate through a list, we want to use both its values and indices in expressions. As shown in Figure 7, we should use <code>enumerate()</code>, which turns values of a list into pairs of index and value. This also speed-up our code by about 2 times. <img src="Figure7.png" alt="Figure 7" /></p>
+</div>
+<div id="use-zip-for-packing-and-unpacking-multiple-iterables" class="section level4">
+<h4>6. Use <code>zip()</code> for packing and unpacking multiple iterables</h4>
+<p>In some cases, we will need to iterate through two or more lists. We then can use <code>zip()</code> function, which transforms multiple lists into a single list of tuples (Figure 8). Note that the lists are better to be in the same length, otherwise, <code>zip()</code> stops as soon as the shorter list ends. <img src="Figure8.png" alt="Figure 8" /></p>
+<p>Reversely, to access items in each tuple within the list, we can also unzip a list of tuple by adding an asterisk(*) and using multiple assignments, like this, <code>letters1, numbers1 = zip(*pairs_list)</code>.</p>
+</div>
+<div id="combine-set-and-in" class="section level4">
+<h4>7. Combine <code>set()</code> and <code>in</code></h4>
+<p>When we want to check if a value exists inside a list or not, a clumsy way is to construct a function like this:</p>
+<pre class="python"><code># Construct a function for membership test
+def check_membership(n):
+    for element in another_long_list:
+        if element == n:
+            return True
+    return False</code></pre>
+<p>Then call <code>check_membership(value)</code> to see if the <code>value</code> inside <code>another_long_list</code>. However, a pythonic way to do this is just to use in by calling <code>value in another_long_list</code> as shown in Figure 9. It just like you are asking Python literally that “hey python, could you please tell me if <code>value</code> inside <code>another_long_list</code>”. <img src="Figure9.png" alt="Figure 9" /></p>
+<p>To be more efficient, we should first remove duplicates from the list by using <code>set()</code> and then test the membership in the set object. By doing so, we reduced the number of elements that need to be check. In addition, <code>in</code> is a very fast operation on sets by design.</p>
+<p>As you can see from Figure 9, even though it took 20ms to construct the set object, this is just a one-time invest and the checking step itself only used 5.2µs. That is 1962 times improvement.</p>
+</div>
+<div id="check-if-a-variable-is-true" class="section level4">
+<h4>8. Check if a variable is true</h4>
+<p>Inevitably, we will use a lot of <code>if</code> statements to check for empty variables, empty lists, empty dictionaries, and so on. We can save a bit time from here as well.</p>
+<p>As shown in Figure 10, we do not need to explicitly state <code>== True</code> or <code>is True</code> in the <code>if</code> statement, instead we just use the variable name. This saves the resource used by magic function <a href="https://stackoverflow.com/questions/3588776/how-is-eq-handled-in-python-and-in-what-order"><code>__eq__</code></a> for comparing values in both sides. <img src="Figure10.png" alt="Figure 10" /></p>
+<p>Likewise, if we need to check if the variable is empty, we just need to say <code>if not string_returned_from_function:</code>.</p>
+</div>
+<div id="count-unique-values-use-counters" class="section level4">
+<h4>9. Count unique values use <code>Counters()</code></h4>
+<p>Let’s say we are trying to count unique values in the list we generated in <strong>Rule 1</strong>, <code>a_long_list</code>. One way is to create a dictionary in which the keys are numbers and the values are counts. As we iterate the list, we can increment its count if it is already in the dictionary and add it to the dictionary if it is not.</p>
+<pre class="python"><code>num_counts = {}
+for num in a_long_list:
+    if num in num_counts:
+        num_counts[num] += 1
+    else:
+        num_counts[num] = 1</code></pre>
+<p>However, a more efficient way to do this is just using <code>Counter()</code> from <a href="https://docs.python.org/3.8/library/collections.html">collections</a> in one line of code, <code>num_counts2 = Counter(a_long_list)</code>. Yes, it is that simple. As show in Figure 11, it is about 10 times faster than the function we wrote.</p>
+<p>If we want to know the 10 most common numbers, the <code>Counter()</code> instance also has a <code>most_common</code> method that is very handy. <img src="Figure11.png" alt="Figure 11" /></p>
+<p>In a word, <strong>collections</strong> is an amazing module, we should save it into our daily tool box and use it whenever we can.</p>
+</div>
+<div id="put-for-loop-inside-the-function" class="section level4">
+<h4>10. Put <code>for</code> loop inside the function</h4>
+<p>There might be a time that we built a function and need to reiterate this function for a given number of times. An obvious way is that we build a function and then put this function into a <code>for</code> loop.</p>
+<p>However, as shown in Figure 12, instead of repeatedly executing the function 1 million time (the length of a_long_list is 1,000,000), we integrated the <code>for</code> loop inside the function. This saved us about 22% of running time. <img src="Figure12.png" alt="Figure 12" /></p>
+<p>That’s all! Thanks for reading this post. I hope that some tricks can be useful for you. Also, what are some other approaches that you used to speed up your Python code? I will really appreciate if you share them by leaving a comment.</p>
+<p>Here are links you may be interested in:</p>
+<ul>
+<li><a href="https://docs.python.org/3/howto/sorting.html">How to sort a list using <code>sort()</code> and <code>sorted()</code></a></li>
+<li><a href="https://realpython.com/list-comprehension-python/">When to use a list comprehension in Python</a></li>
+<li><a href="https://www.youtube.com/watch?v=OSGv2VnC0go">Transforming Code into Beautiful, Idiomatic Python</a></li>
+<li><a href="https://medium.com/@mindfiresolutions.usa/advantages-and-disadvantages-of-python-programming-language-fd0b394f2121">Advantages and Disadvantages of Python Programming Language</a></li>
+</ul>
+<hr />
+<p>As always, I welcome feedback, constructive criticism, and hearing about your data science projects. I can be reached on <a href="https://www.linkedin.com/in/jun-ye-29aaa769/">Linkedin</a>, and now on my <a href="https://junye0798.com/">website</a> as well.</p>
+</div>
