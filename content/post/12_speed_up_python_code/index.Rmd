@@ -47,9 +47,9 @@ Both functions can sort list.
 
 If we just want to obtain a sorted list and do not care about the original list, **`sort()` is a bit faster than `sorted()` both for basic sorting and when using key parameters** (the `key` parameter specifies a function to be called on each list element prior to making comparisons), as shown in Figure 3.
 
-This is because the `sort()` method modifies the list in-place while `sorted(`) builds a new sorted list and keep original list intact. Note that even though we assigned `a_long_list.sort()` to a new variable (`a_long_list_sorted`), the order of values inside `a_long_list` itself actually already changed.
-![Figure 3](./Figure3.png)
-
+This is because the `sort()` method modifies the list in-place while `sorted(`) builds a new sorted list and keep original list intact. In other word, the order of values inside `a_long_list` itself actually already changed.
+![Figure 3-1](./Figure3-1.png)
+![Figure 3-2](./Figure3-2.png)
 However, `sorted()` is more versatile compared to `sort()`. This is because `sorted()` accepts any iterable while `sort()` is only defined for lists. Therefore, if we want to sort something other than a list, `sorted()` is the right function to use. For example, we can quickly sort a dictionary either by its keys or values (Figure 4).
 ![Figure 4](./Figure4.png)
 
