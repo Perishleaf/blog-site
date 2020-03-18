@@ -70,11 +70,11 @@ With these classifications, we can now gain more information from the curve matr
 
 ![Figrue 4](./featured.png)
 
-Mainland China has now been in phase three by the definition of the epidemic curve. This is a good sign. However, we should know that these are built on top of people’s huge sacrifice via pausing the entire nation during this year’s festive season (i.e. Chinese New Year), staying at home, minimising outdoor activities and avoiding mass gatherings, and wearing face masks if going out. In addition, they built two new hospitals in a matter of weeks and sent about 43 thousands medical workers to Wuhan.
+Mainland China has now been in phase three by the definition of the epidemic curve. This is an encouraging sign. However, we should know that these are built on top of people’s huge sacrifice via pausing the entire nation during this year’s festive season (i.e. Chinese New Year), staying at home, minimising outdoor activities and avoiding mass gatherings, and wearing face masks if going out. In addition, they built two new hospitals in a matter of weeks and sent about 43 thousands medical workers to Wuhan.
 
 The question left to us to consider is that if there are resources in this scale to do what China did when the outbreak comes to many other countries/regions or we should act quickly and proactively to slow down and even prevent its coming.
 
-These bring us to the second clusters (Light Green). These regions all recorded their first confirmed cases in very early date, however, maintained relatively flat curves. These could be attributed to their timely deployment of well-thought-out steps designed to contain the spread of coronavirus. Again, this highlights the necessity of acting quickly and proactively.
+These bring us to the second clusters (Light Green). These regions all recorded their first confirmed cases in very early date, however, maintained relatively flat curves. These could be attributed to their timely deployment of well-thought-out steps designed to contain the spread of coronavirus. Again, this highlights the necessity of acting quickly and proactively. Moreover, it also means that if we keep complying with all the measures, things should improve.
 
 You might notice that South Korea is also within this group. This is mainly because the high peak popped up later in the curve was trigger by a so-called [Patient 31](https://graphics.reuters.com/CHINA-HEALTH-SOUTHKOREA-CLUSTERS/0100B5G33SB/index.html), who was a super-spreader and passed it to thousands of other people. Fortunately, South Korea has almost passed the peak and being back to a reasonable level.
 
@@ -98,6 +98,17 @@ As stated in the beginning, here we only examined the growth patterns without co
 > “Life is a sum of all our choice.”
 >
 > Albert Camus
+
+---
+
+Data sourced from 
+
+* [丁香园](https://ncov.dxy.cn/ncovh5/view/pneumonia?scene=2&clicktime=1579582238&enterid=1579582238&from=singlemessage&isappinstalled=0)
+* [Tencent News](https://news.qq.com//zt2020/page/feiyan.htm#charts)
+* [Australia Government Department of Health](https://www.health.gov.au/news/coronavirus-update-at-a-glance)
+* [worldometers](https://www.worldometers.info/coronavirus/)
+* [National Health Commission of the People's Republic of China](http://www.nhc.gov.cn/)
+* [JCU-CSSE](https://docs.google.com/spreadsheets/d/1yZv9w9zRKwrGTaR-YzmAqMefw4wMlaXocejdxZaTs6w/htmlview?usp=sharing&sle=true#)
 
 ---
 That’s all folks. As always, I welcome feedback, constructive criticism, and hearing about your data science projects. I can be reached on [Linkedin](https://www.linkedin.com/in/jun-ye-29aaa769/), and now on my [website](https://junye0798.com/) as well.
