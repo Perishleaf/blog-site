@@ -1,0 +1,178 @@
+---
+title: Everything You Need To Know About Correlation
+author: Jun Ye
+date: '2020-03-05'
+slug: everythin-you-need-to-know-about-correlation 
+categories:
+  - Post
+tags:
+  - Data analysis
+  - Statistic
+  - Python
+  - Pandas
+subtitle: "Pearson, Spearman, Kendall, Biserial, Tetrachoric and more"
+summary: ''
+authors: 
+- admin
+lastmod: '2020-03-05T10:13:11+10:00'
+featured: yes
+image:
+  caption: ''
+  focal_point: ''
+  placement: 2
+  preview_only: false
+projects: []
+---
+
+
+
+<p>Correlation is one of the most fundamental statistical concepts used in almost any sectors.</p>
+<p>For example, as in <a href="https://www.investopedia.com/terms/p/portfoliomanagement.asp">portfolio management</a>, correlation is often used to measure the amount of diversification among the assets contained in a portfolio. Choosing assets with low or negative correlation with each other can help to reduce the risk of a portfolio. In addition, correlations give insights about marketing strategies and business outcomes in <a href="https://en.wikipedia.org/wiki/Marketing_research">marketing research</a>, which further help marketers make actionable decisions, and ultimately, grow businesses.</p>
+<p>In a nutshell, we use correlation to state in quantitative terms both the <strong>strength</strong> and <strong>direction</strong> of the relationship between two sets of variables when the measurements in one set are related to those in the other set in a way not expected by chance alone.</p>
+<p>Possibly, you might have similar experience like me, struggling with many different types of correlations (e.g. <em>Pearson, Spearman, Kendall, Biserial, Tetrachoric and many more</em>). <strong>What are the differences? Which one should we use? and How do we calculate them in Python</strong>?</p>
+<p>In this post, I will share with you my notes for answering these questions. As usual, I provide a notebook for you to practice with, which can be accessed from <a href="https://github.com/Perishleaf/data-visualisation-scripts/tree/master/correlation_explained">my Github</a>.</p>
+<hr />
+<div id="several-key-terms" class="section level4">
+<h4>1. Several key terms</h4>
+<p>Before we delve into correlations, it would be better if we can list some key terms and keep them handy.</p>
+<ol style="list-style-type: decimal">
+<li><strong>Standard deviation</strong>: it is a measure of the amount of variation or dispersion of a set of values (<em>it is just the square root of variance σ²</em>).</li>
+</ol>
+<ul>
+<li><strong>Population</strong> Standard Deviation: <span class="math inline">\(N\)</span> is population size and <span class="math inline">\(\mu\)</span> is population mean.</li>
+</ul>
+<p><span class="math display">\[ \sigma = \sqrt{\frac{\displaystyle\sum_{i=1}^{N}(x_i - \mu)^2}{N}} \]</span> <strong><span class="math inline">\(N\)</span></strong> : population size</p>
+<p><strong><span class="math inline">\(\mu\)</span></strong> : population mean</p>
+<ul>
+<li><strong>Sample</strong> Standard Deviation: <span class="math inline">\(n\)</span> is sample size and <span class="math inline">\(\bar{x}\)</span> is the sample mean.</li>
+</ul>
+<p><span class="math display">\[ s = \sqrt{\frac{\displaystyle\sum_{i=1}^{n}(x_i - \bar{x})^2}{n-1}} \]</span></p>
+<p><strong><span class="math inline">\(n\)</span></strong> : sample size</p>
+<p><strong><span class="math inline">\(\bar{x}\)</span></strong> : sample mean of <span class="math inline">\(x\)</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>Covariance</strong>: it is a measure of extent of two variables vary in tandem from their mean.</li>
+</ol>
+<ul>
+<li>Population covariance: <span class="math inline">\(N\)</span> is population size and <span class="math inline">\(\mu\)</span> is population mean.</li>
+</ul>
+<p><span class="math display">\[ COV(x, y) = \frac{\displaystyle\sum_{i=1}^{N}(x_i - \mu_x)(y_i - \mu_y)}{N} \]</span></p>
+<p><strong><span class="math inline">\(N\)</span></strong> : population size</p>
+<p><strong><span class="math inline">\(\mu_x\)</span></strong> : population mean of <span class="math inline">\(x\)</span></p>
+<p><strong><span class="math inline">\(\mu_y\)</span></strong> : population mean of <span class="math inline">\(y\)</span></p>
+<ul>
+<li>Sample covariance: <span class="math inline">\(n\)</span> is sample size and <span class="math inline">\(\bar{x}/\bar{y}\)</span> is the sample mean.</li>
+</ul>
+<p><span class="math display">\[ COV(x, y) = \frac{\displaystyle\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{(n - 1)} \]</span></p>
+<p><strong><span class="math inline">\(n\)</span></strong> : sample size</p>
+<p><strong><span class="math inline">\(\bar{x}\)</span></strong> : sample mean of <span class="math inline">\(x\)</span></p>
+<p><strong><span class="math inline">\(\bar{y}\)</span></strong> : sample mean of <span class="math inline">\(y\)</span></p>
+<ol start="3" style="list-style-type: decimal">
+<li><p><strong>Parametric test</strong>: it assumes underlying statistical distributions in the data. Conditions of validity must be met so that the result of a parametric test is reliable.</p></li>
+<li><p><strong>Non-parametric test</strong>: it does not rely on any distribution, which can thus be applied when parametric conditions of validity are not met.</p></li>
+<li><p><strong>Effect size/Strength</strong>: correlation coefficients between .10 and .29 represent a small association, coefficients between .30 and .49 represent a medium association, and coefficients of .50 and above represent a large association or relationship.</p></li>
+<li><p><strong>Categorical variables</strong>: also known as discrete or qualitative variables. Categorical variables can be further categorised as either <strong>nominal</strong>, <strong>dichotomous</strong> or <strong>ordinal</strong>.</p></li>
+</ol>
+<ul>
+<li><p>Nominal variables are variables that have two or more categories, but which do not have an intrinsic order. For example, type of property (house, unit and apartment), company names, religion, colour preference and postal code.</p></li>
+<li><p>Dichotomous variables are nominal variables but only have two categories or levels. For example, gender(male and female), yes/no questions, and telecom churn data (churn or stay).</p></li>
+<li><p>Ordinal variables are variables that have two or more categories just like nominal variables, but they can also be ordered or ranked. For example, car size(subcompact, compact, midsize, luxury), economic status (lower, middle, or upper class), rank 5 types of beer, and degree of satisfaction (very dissatisfied, somewhat dissatisfied, somewhat dissatisfied, and disatisfied).</p></li>
+</ul>
+<ol start="7" style="list-style-type: decimal">
+<li><strong>Continuous variables</strong>: also known as quantitative variables. This type of data possesses the properties of order and equal intervals between adjacent units. Continuous variables can be further categorised as either interval or ratio variables.</li>
+</ol>
+<ul>
+<li>Interval variables: data that can be measured along a continuum and have numerical values. For example, temperature, birth years, degree of satisfaction (point scale units, 1–10) and shoe size.</li>
+<li>Ratio variables: they are interval variables, but with a clear definition of 0, indicating there is none of that variable. For example, income, price, distance, number of children in a family, hours of driving, dose amount, and many more.</li>
+</ul>
+<p>The name “ratio” reflects the fact that multiplication and division operations can be performed on the values of a ratio variable. Thus, we can say that a 15 dollar price is three times more expensive than a 5 dollar price. However, a temperature of 10°C should not be considered twice as hot as 5°C. It is only 5°C higher (i.e. only addition and subtraction operations can be applied to values of an interval variable).</p>
+<p>Here is a diagram (Figure 1) adopted from <a href="https://www.graphpad.com/">GraphPad</a> that may help you to understand these different variables <img src="Fig1_Ratio%20Interval%20Ordinal%20Nominal.png" alt="Figure 1" /></p>
+<ol start="8" style="list-style-type: decimal">
+<li><p><strong>Monotonic relationship</strong>: in a monotonic relationship, the two variables tend to be one of the following: (1) as the value of one variable increases, so does the value of the other variable; or (2) as the value of one variable increases, the other variable value decreases., but not necessarily at a constant rate (Figure 2). <img src="Fig2_monotonic.png" alt="Figure 2" /></p></li>
+<li><p><strong>Linear relationship</strong>: in a linear relationship, the two variables do the same as monotonic relationship but at a constant rate. The trend can be modelled by a straight line. Linear relationships are all monotonic, but not all monotonic relationships are linear.</p></li>
+<li><p><strong>Tied ranks</strong>: these are two items in a column with the same rank during the calculation for Spearman correlation coefficient.</p></li>
+<li><p><strong>Concordant/Discordant</strong>: describe if ranks of two samples are ordered in the same way.</p></li>
+</ol>
+<p>Given two observations (<span class="math inline">\(u_i\)</span>,<span class="math inline">\(v_i\)</span>) and (<span class="math inline">\(u_j\)</span>,<span class="math inline">\(v_j\)</span>) in a bivariate array, then</p>
+<p><span class="math display">\[\frac{v_j-v_i}{u_j-u_i}&gt;0\]</span> two observations are concordant</p>
+<p><span class="math display">\[\frac{v_j-v_i}{u_j-u_i}&lt;0\]</span> two observations are discordant</p>
+<p><span class="math display">\[\frac{v_j-v_i}{u_j-u_i}=0\]</span> two observations are considered as a tie</p>
+<p>when <span class="math inline">\(u_i\)</span> = <span class="math inline">\(u_j\)</span>, observations are not compared</p>
+<p><span class="math inline">\(u_i\)</span>: the rank of the <em>ith</em> observation in the first sample</p>
+<p><span class="math inline">\(v_i\)</span>: the rank of the <em>ith</em> observation in the second sample</p>
+</div>
+<div id="understanding-strength-direction-and-significance-of-correlation" class="section level4">
+<h4>2. Understanding strength, direction and significance of correlation</h4>
+<p>The correlation between two variables is quantified with a number, <strong>correlation coefficient</strong>, which generally varies between −1 and +1. Zero means there is no correlation, where 1 means a complete or perfect correlation. The strength of the correlation increases both from 0 to +1, and 0 to −1. The sign denotes the direction of the correlation. A negative correlation means that the two variables are inversely correlated.</p>
+<p>Generally, in addition to the strength of correlation, we also need to report its statistical significance, the <strong>p-value</strong>. The p-value shows the probability that this strength of correlation may occur by chance. A statistically significant correlation does not necessarily mean that the strength of the correlation is strong.</p>
+<p>For example, two correlation coefficients of 0.32 (p&lt;0.01) and 0.93 (p&lt;0.05). Even though correlation of 0.32 has a more significant level (p&lt;0.01), it is still a weaker correlation compered to correlation of 0.93. The p&lt;0.01 only assures that 99% of the time the correlation is 0.32.</p>
+</div>
+<div id="pearsons-correlation-parametric-test" class="section level4">
+<h4>3. Pearson’s correlation (parametric test)</h4>
+<p>Pearson’s correlation coefficient (Pearson product-moment correlation coefficient) is the most widely used statistical measure for the degree of the relationship between <strong>linearly related variables</strong>. It is denoted by letter <span class="math inline">\(r\)</span>.</p>
+<p>Pearson’s <span class="math inline">\(r\)</span> is calculated via dividing the covariance of these two variables by the product of their standard deviations. <span class="math display">\[ r = \frac{COV(x,y)}{\sigma_x\sigma_y} \]</span> Its calculation requires the following data assumptions to be valid: * interval or ratio variables * linearly related In practice, the second assumption is visually checked by making a scatterplot with the tested two variables (Figure 3). <img src="Fig3.png" alt="Figure 3" /></p>
+<blockquote>
+<p>“Pearson r does not assume normality. Many people believe that both variables must be normally distributed in order to justify the computation of &gt; r. But many people also believe that they can drive better after they have been drinking.” Albert K. Kurtz &amp; Samuel T. Mayo</p>
+</blockquote>
+<p>Pearson r itself <a href="https://stats.stackexchange.com/questions/3730/pearsons-or-spearmans-correlation-with-non-normal-data">does not assume normality</a>! In practice, the reason that we still need to check the bivariate normality is for satisfying the assumption underlying the statistical test of significance.</p>
+<p>There are several different ways to test normality in Python, including histogram plot (<code>pyplot.hist()</code>), Normal Q-Q plot(<code>statsmodels.qqplot()</code>), Shapiro-Wilk test (<code>scipy.stats.shapiro()</code>), D’Agostino’s test (<code>scipy.stats.normaltest()</code>), and Anderson-Darling test(<code>scipy.stats.anderson()</code>).</p>
+<p>Another thing we need to notice is that, as manifested by the standard deviations in its formula, Pearson’s correlation coefficient is naturally sensitive to skewed distributions and outliers.</p>
+<p>If our data meet the above assumptions and prerequisites, we can easily calculate Pearson’s r in Python by calling <code>scipy.stats.pearsonr(x, y)</code>, which returns us both Pearson correlation coefficient and p-value. Or we can use <code>pandas.dataframe.corr(method=’pearson’)</code> to find the pairwise correlation of all columns in a dataframe.</p>
+</div>
+<div id="spearmans-correlation-non-parametric-test" class="section level4">
+<h4>4. Spearman’s correlation (non-parametric test)</h4>
+<p>Under most circumstances, if our data meet all requirements, the Pearson’s <span class="math inline">\(r\)</span> is the best measure of relationship and should be used. However, not everything can go on as one wishes. Fortunately, when not ideal data come to our hand, there are still a couple of options enable us to get correlation coefficients.</p>
+<p>The Spearman rank correlation coefficient, often denotes as <span class="math inline">\(\rho\)</span> (rho) or <span class="math inline">\(r_s\)</span>, is the non-parametric version of the Pearson correlation coefficient. It can deal with ordinal, interval or ratio variables for <strong>monotonic relationships</strong>.</p>
+<p>As its name suggests, Spearman’s <span class="math inline">\(\rho\)</span> relies on ranks of the given two variables instead of their values. The formula in its simple form is as follow:</p>
+<p><span class="math display">\[ \rho = 1 - \frac{6\displaystyle\sum_{i=1}^{n}d_i^2}{n(n^2-1)} \]</span></p>
+<p><strong>$ n $</strong> : sample size</p>
+<p><strong>$ d_i $</strong> : Difference between ranks for <em>ith</em> sample</p>
+<p>Please take a look a example in Figure 4 for a calculation of correlation between distance from airport and price of bottled water, which I believe will help you to understand the formula immediately. <img src="Fig4.png" alt="Figure 4" /></p>
+<p>As we can see from Figure 4, the Spearman correlation is less sensitive to strong outliers than the Pearson correlation as Spearman’s <span class="math inline">\(\rho\)</span> limits the outlier to the value of its rank.</p>
+<p>One other thing should notice is the tied ranks (Store #2 and #4 in Figure 5). When this happens, we can take the average of the ranks that they would have otherwise occupied. It is still ok to use the simple form of formula when the number of ties is small (1 or 2)relative to <span class="math inline">\(n\)</span>. Otherwise we need to use the full version of Spearman’s formula, which will deal with tied ranks:</p>
+<p><span class="math display">\[ \rho = \frac{n\displaystyle\sum_{i=1}^{n}u_iv_i-\left(\displaystyle\sum_{i=1}^{n}u_i\right)\left(\displaystyle\sum_{i=1}^{n}v_i\right)}{\sqrt{\left[n\displaystyle\sum_{i=1}^{n}u_i^2-\left(\displaystyle\sum_{i=1}^{n}u_i\right)^2\right]\left[n\displaystyle\sum_{i=1}^{n}v_i^2-\left(\displaystyle\sum_{i=1}^{n}v_i\right)^2\right]}} \]</span></p>
+<p><span class="math inline">\(u_i\)</span>: the rank of the <em>ith</em> observation in the first sample</p>
+<p><span class="math inline">\(v_i\)</span>: the rank of the <em>ith</em> observation in the second sample</p>
+<p>In Python, we can call <code>scipy.stats.spearmanr()</code>, which return us both <span class="math inline">\(\rho\)</span> and p-value. Or we can use <code>pandas.dataframe.corr(method=’spearman’)</code> to find the pairwise correlation of all columns in a dataframe.</p>
+</div>
+<div id="kendalls-correlation-non-parametric-test" class="section level4">
+<h4>5. Kendall’s correlation (non-parametric test)</h4>
+<p>Generally, when the sample size is small and has many tied ranks, Kendall’s correlation, often denotes as <span class="math inline">\(\tau\)</span> (Tau) (There are three versions of Tau, namely, Tau-a, Tau-b, and Tau-c), is the best alternative to Spearman’s correlation.</p>
+<p>Kendall’s correlation requires the same data assumptions as Spearman’s correlation, which 1) ordinal, interval or ratio variables and 2) monotonic relationships between the two variables.</p>
+<p>Here we only introduce Tau-b (this is the method used in <code>scipy.stats.kendalltau(x, y)</code>), which is defined as:</p>
+<p><span class="math display">\[\tau_b=\frac{N_c-N_d}{\sqrt{(N_c+N_d+T_x)(N_c+N_d+T_y)}}\]</span></p>
+<p>where <span class="math inline">\(N_c\)</span> and <span class="math inline">\(N_d\)</span> denoting the number of concordant pairs and the number of discordant pairs, respectively, in the sample. <span class="math inline">\(T_x\)</span> denoting the number of pairs tied for the first response variable only and <span class="math inline">\(T_y\)</span> denoting the number of pairs tied for the second variable only. Kendall’s <span class="math inline">\(\tau_b\)</span> is equal to Kendall’s <span class="math inline">\(\tau_a\)</span> when there are no ties but is preferred to Kendall’s tau-a when there are ties.</p>
+<p>In Python, we can call <code>scipy.stats.kendalltau(x, y)</code>, which return us both <span class="math inline">\(\tau\)</span> and p-value. Or we can use <code>pandas.dataframe.corr(method=’kendall’)</code> to find the pairwise correlation of all columns in a dataframe.</p>
+<p>Taken together, in regards to tolerance of outliers and discrepancies in data, Kendall’s correlation is the most robust measure, followed by Spearman’s correlation while Pearson’s correlation is most sensitive one.</p>
+</div>
+<div id="point-biserials-correlation" class="section level4">
+<h4>6. Point biserial’s correlation</h4>
+<p>When we need to correlate a continuous variable with another <strong>dichotomous variable</strong>, we can use point biserial’s correlation. Point biserial’s correlation is usually denoted by symbol <span class="math inline">\(r_{pb}\)</span>, calculating as follow:</p>
+<p><span class="math display">\[r_{pb}=\frac{M_1-M_0}{s_n}\sqrt{\frac{n_1n_0}{n(n-1)}}\]</span></p>
+<p><span class="math inline">\(M_1\)</span> being the mean value on the continuous variable X for all data points in group 1, and <span class="math inline">\(M_0\)</span> the mean value on the continuous variable X for all data points in group 2. Further, <span class="math inline">\(n_1\)</span> is the number of data points in group 1, <span class="math inline">\(n_0\)</span> is the number of data points in group 2 and <span class="math inline">\(n\)</span> is the total sample size.</p>
+<p>In Python, this can be calculated by calling <code>scipy.stats.pointbiserialr(x, y</code>), which again returns us both a point biserial correlation coefficient and its p-value.</p>
+<p>We should notice that there is biserial’s correlation, which is also a correlation coefficient for a continuous variable with another dichotomous variable. However, the dichotomous variable here should be fundamentally continuous and normally distributed.</p>
+<p>In other words, this type of dichotomous variable, in reality, is continuous and normally distributed, but recorded in only two categories. So can be called as continuous dichotomies.</p>
+<p>Compared to <strong>categorical dichotomies</strong>, the <strong>continuous dichotomies</strong> can be thought of as a normally distributed continuous variable that is artificially grouped into two classes. For example, test scores can be split as pass and fail by using a certain threshold. Sales can be classified as bad and good and so on.</p>
+<p>However, as you may ask why I want to lose information by converting the continuous variable into a dichotomous variable? To be honest, I don’t know either. Maybe statisticians just like to invent formulae. Anyway, in a situation like this, I just use Pearson’s correlation.</p>
+</div>
+<div id="tetrachorics-correlation" class="section level4">
+<h4>7. Tetrachoric’s correlation</h4>
+<p>Tetrachoric’s correlation is designed to estimate of Pearson <span class="math inline">\(r\)</span> when we wish to correlate two dichotomous variables with each other. Each of these variables may, in reality, be continuous and normally distributed, but recorded in only two categories.</p>
+<p>As its definition appears, the applicability of Tetrachoric’s correlation is not quite so general. Essentially, it does not apply to categorical variables at all. For such situations, we should use Phi’s correlation (<span class="math inline">\(\phi\)</span>, AKA. Matthews correlation coefficient (MCC)) instead.</p>
+<p>In python, we can get <span class="math inline">\(\phi\)</span> using <code>sklearn.metrics.matthews_corrcoef()</code>.</p>
+<hr />
+<p>Finally, we should notice that there are many more techniques used for correlation calculation, which are not covered in this post. We should definitely to choose appropriate method based on our data and purpose. I hope you learn something useful from this post.</p>
+<p>Thanks for reading!</p>
+<hr />
+<p>Here are some links you may find useful:</p>
+<ul>
+<li><a href="https://www.formpl.us/blog/nominal-ordinal-interval-ratio-variable-example">Nominal, Ordinal, Interval &amp; Ratio Variable + [Examples]</a></li>
+<li><a href="https://www.formpl.us/blog/interval-data">What is Interval Data? + [Examples, Variables &amp; Analysis]</a></li>
+<li><a href="http://users.monash.edu/~smarkham/resources/scaling.htm#nominal">Measurement scales for nominal, ordinal, interval and ratio variables</a></li>
+<li><a href="https://www.statisticshowto.datasciencecentral.com/kendalls-tau/">Kendall’s Tau (Kendall Rank Correlation Coefficient)</a></li>
+<li><a href="https://ncss-wpengine.netdna-ssl.com/wp-content/themes/ncss/pdf/Procedures/NCSS/Point-Biserial_and_Biserial_Correlations.pdf">Point-Biserial and Biserial Correlations</a></li>
+<li><a href="https://stats.stackexchange.com/questions/59343/relationship-between-the-phi-matthews-and-pearson-correlation-coefficients">Relationship between the phi, Matthews and Pearson correlation coefficients</a></li>
+</ul>
+<hr />
+<p>As always, I welcome feedback, constructive criticism, and hearing about your data science projects. I can be reached on <a href="https://www.linkedin.com/in/jun-ye-29aaa769/">Linkedin</a>, and now on my <a href="https://junye0798.com/">website</a> as well.</p>
+</div>
