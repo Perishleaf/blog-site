@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/junye
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://junye0798.com
+  * I am junye (https://keybase.io/junye) on keybase.
+  * I have a public key ASDUVsqBw-d5tgjaEVn6kFclkWH4Kgb8hQe3hlTgZ70n8Qo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120d456ca81c3e779b608da1159fa9057259161f82a06fc8507b78654e067bd27f10a",
+      "host": "keybase.io",
+      "kid": "0120d456ca81c3e779b608da1159fa9057259161f82a06fc8507b78654e067bd27f10a",
+      "uid": "d332d93f4142ead40579b68f04a38b19",
+      "username": "junye"
+    },
+    "merkle_root": {
+      "ctime": 1585109025,
+      "hash": "79336cbe11371f6d249261815634183b2e70f4ecbf49514340c0bd820c4c07257fb57120853d2e58322264945588e6f5a587878e687dbb3810b361d3f4e545a7",
+      "hash_meta": "314f0ceb68b9fa08d68ebffdd2e77d9a2245fad941cc7edb69b6ef628e4b2b62",
+      "seqno": 15593148
+    },
+    "service": {
+      "entropy": "6Zr1sh2fO7AIJsvg/w1SjRmc",
+      "hostname": "junye0798.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.3.0"
+  },
+  "ctime": 1585109048,
+  "expire_in": 504576000,
+  "prev": "142719e99b4ed648c39c9cbce4c292460f67c1f5aa1e639057869bc448cdc2ff",
+  "seqno": 7,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEg1FbKgcPnebYI2hFZ+pBXJZFh+CoG/IUHt4ZU4Ge9J/EKp3BheWxvYWTESpcCB8QgFCcZ6ZtO1kjDnJy85MKSRg9nwfWqHmOQV4abxEjNwv/EIALYtRxQm1hz5aBFHhFAVzAUtexvHKhjaSlKx7bgDsPoAgHCo3NpZ8RAGto32H/LiuvJVaWoSibVdt+iimIkr6erSaUa7h+Jij18bEDtsmJ2F3jbS9kDC7+phQYZANG6Fb+zHSMzLw2UC6hzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIPVnzVY/69EUWazjIa6Mvkc6pliwFrlOezcUNTujm9t/o3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/junye
+
+==================================================================
