@@ -13,10 +13,10 @@ links:
   icon_pack: fab
   name: Plotly, Dash
   url: 
-summary: A dashboard built to track the spread of recent outbreak coronavirus (2019-nCoV). 
+summary: A dashboard built to track the spread of recent outbreak coronavirus (COVID-19). 
 tags:
 - Dashboard
 - Plotly
 - Dash
-title: Coronavirus (2019-nCoV) cases monitor
+title: Coronavirus (COVID-19) cases dashboard
 ---
